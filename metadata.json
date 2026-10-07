@@ -1,0 +1,6 @@
+{
+  "name": "Sistem Pembelajaran Adaptif AI - PHP",
+  "description": "Sistem pembelajaran adaptif berbasis AI untuk mengukur kemampuan, analisis skill gap, dan rekomendasi pembelajaran pemrograman PHP.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

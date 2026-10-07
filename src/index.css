@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-dark-space: #0B1020;
+    --bg-midnight: #0D1527;
+    --bg-surface: #111827;
+    --bg-surface-muted: #1E293B;
+    --border-divider: #334155;
+    --border-surface: #1E293B;
+    --color-blue: #3B82F6;
+    --color-indigo: #6366F1;
+    --color-violet: #8B5CF6;
+    --color-emerald: #10B981;
+    --color-amber: #F59E0B;
+    --color-red: #EF4444;
+    --text-title: #F8FAFC;
+    --text-desc: #94A3B8;
+    --text-muted: #64748B;
+  }
+
+  body {
+    background-color: #0B1020;
+    color: #F8FAFC;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    min-height: 100vh;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  /* Custom dark scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0B1020;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+  }
+}
+
+/* Custom scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

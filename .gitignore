@@ -1,0 +1,27 @@
+.DS_Store
+.vscode/
+node_modules/
+dist/
+server.js
+.env
+*.log
+npm-debug.log*
+.idea/
+
+# Laravel
+laravel/vendor/
+laravel/node_modules/
+laravel/.env
+laravel/database/database.sqlite
+laravel/public/storage
+
+# OS files
+Thumbs.db
+ehthumbs.dbnode_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example

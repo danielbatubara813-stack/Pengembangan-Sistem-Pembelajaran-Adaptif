@@ -1,0 +1,17 @@
+/vendor/
+/node_modules/
+/.env
+/public/storage
+/storage/*.key
+/bootstrap/cache/*.php
+/database/database.sqlite
+
+# Ignore IDE/editor folders
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Mac
+.DS_Store

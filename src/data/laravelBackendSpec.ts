@@ -38,7 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'profile']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    // 1. Assessment Awal 50 Soal
+    // 1. Assessment Awal (10 soal acak per level)
     Route::get('/assessment/initial-questions', [AssessmentController::class, 'getInitialQuestions']);
     Route::post('/assessment/submit-initial', [AssessmentController::class, 'submitInitial']);
     Route::get('/assessment/initial-result/{id}', [AssessmentController::class, 'getInitialResult']);
@@ -48,7 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/recommendations/topic/{topic}', [RecommendationController::class, 'getTopicDetail']);
     Route::post('/recommendations/mark-completed', [RecommendationController::class, 'toggleCompleted']);
 
-    // 3. Retest 50 Soal
+    // 3. Retest maksimal 30 soal
     Route::get('/retest/questions', [RetestController::class, 'getRetestQuestions']);
     Route::post('/retest/submit', [RetestController::class, 'submitRetest']);
     Route::get('/retest/result/{id}', [RetestController::class, 'getRetestResult']);
@@ -85,7 +85,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // 2. Tabel Bank Soal (50 Assessment Awal + 50 Retest)
+        // 2. Bank soal dengan paket tes awal 30 soal dan retest maksimal 30 soal
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->enum('type', ['initial', 'retest']);
@@ -109,7 +109,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->integer('score'); // 0 - 100
             $table->enum('level', ['Beginner', 'Intermediate', 'Advanced']);
-            $table->integer('total_questions')->default(50);
+            $table->integer('total_questions')->default(30);
             $table->integer('correct_count');
             $table->json('topic_scores'); // detail skor per 12 topik
             $table->text('ai_summary')->nullable();
@@ -157,7 +157,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // 7. Tabel Retests (Pengujian Ulang 50 Soal)
+        // 7. Tabel Retests (Pengujian Ulang maksimal 30 soal)
         Schema::create('retests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
@@ -213,14 +213,20 @@ class AssessmentController extends Controller
     }
 
     /**
-     * Mengambil tepat 50 soal assessment awal
+     * Mengambil 10 soal acak dari setiap level assessment awal
      */
     public function getInitialQuestions()
     {
-        $questions = Question::where('type', 'initial')
-            ->select('id', 'question', 'code_snippet', 'options', 'category', 'difficulty')
-            ->take(50)
-            ->get();
+        $questions = collect(['Beginner', 'Intermediate', 'Advanced'])
+            ->flatMap(fn ($level) => Question::where('exam_type', 'initial')
+                ->where('source', 'csv_bank')
+                ->where('difficulty', $level)
+                ->inRandomOrder()
+                ->take(10)
+                ->get())
+            ->shuffle()
+            ->values();
+        session(['initial_assessment_question_ids' => $questions->pluck('id')->all()]);
 
         return response()->json([
             'status' => 'success',
@@ -229,7 +235,7 @@ class AssessmentController extends Controller
     }
 
     /**
-     * Submit 50 Jawaban, kalkulasi nilai, tentukan level & skill gap via AI
+     * Submit 30 jawaban, kalkulasi nilai, tentukan level & skill gap via AI
      */
     public function submitInitial(Request $request)
     {
@@ -241,7 +247,11 @@ class AssessmentController extends Controller
         $answers = $validated['answers'];
 
         // Ambil kunci jawaban dari DB
-        $questions = Question::where('type', 'initial')->get()->keyBy('id');
+        $questions = Question::where('exam_type', 'initial')
+            ->where('source', 'csv_bank')
+            ->whereIn('id', session('initial_assessment_question_ids', []))
+            ->get()
+            ->keyBy('id');
         
         $correctCount = 0;
         $topicStats = [];
@@ -262,17 +272,17 @@ class AssessmentController extends Controller
                 }
             }
 
-            $score = round(($correctCount / 50) * 100);
+            $score = round(($correctCount / count($questions)) * 100);
 
-            // Aturan Level:
-            // Score < 60 -> Beginner | 60 <= Score < 80 -> Intermediate | Score >= 80 -> Advanced
-            $level = match (true) {
-                $score >= 80 => 'Advanced',
-                $score >= 60 => 'Intermediate',
-                default => 'Beginner'
-            };
+            // Beginner: skor < 70 atau topik < 60; Advanced: skor >= 85 dan semua topik >= 80.
+            $topicPercentages = array_map(fn ($stat) => round(($stat['correct'] / $stat['total']) * 100), $topicStats);
+            $allTopicsAtLeast60 = count($topicPercentages) > 0 && min($topicPercentages) >= 60;
+            $allTopicsAtLeast80 = count($topicPercentages) > 0 && min($topicPercentages) >= 80;
+            $level = $score < 70 || !$allTopicsAtLeast60
+                ? 'Beginner'
+                : ($score >= 85 && $allTopicsAtLeast80 ? 'Advanced' : 'Intermediate');
 
-            // Hitung persentase per topik & deteksi Skill Gap (< 70%)
+            // Hitung persentase topik dan identifikasi gap terhadap level berikutnya.
             $topicScores = [];
             $skillGapsData = [];
 
@@ -285,7 +295,8 @@ class AssessmentController extends Controller
                     'percentage' => $pct
                 ];
 
-                if ($pct < 70) {
+                $target = $level === 'Beginner' ? 60 : 80;
+                if ($pct < $target) {
                     $skillGapsData[] = [
                         'topic' => $topic,
                         'score' => $pct,
@@ -310,7 +321,7 @@ class AssessmentController extends Controller
                 'user_id' => $user->id,
                 'score' => $score,
                 'level' => $level,
-                'total_questions' => 50,
+                'total_questions' => count($questions),
                 'correct_count' => $correctCount,
                 'topic_scores' => $topicScores,
                 'ai_summary' => $aiAnalysis['summary'] ?? null,
@@ -402,7 +413,7 @@ class GeminiAdaptiveService
             $prompt = "Anda adalah AI evaluator sistem pembelajaran adaptif PHP.
 Nama Mahasiswa: $userName
 Skor: $score/100
-Level: $level (Beginner: <60, Intermediate: 60-79, Advanced: >=80)
+Level: $level (Beginner: <70 atau ada topik <60; Intermediate: >=70 dan semua topik >=60; Advanced: >=85 dan semua topik >=80)
 Skor Per Topik: " . json_encode($topicScores) . "
 Skill Gap Terdeteksi: " . json_encode($skillGaps) . "
 

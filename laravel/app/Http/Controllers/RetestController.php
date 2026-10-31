@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
 
 class RetestController extends Controller
 {
+    private const MAX_QUESTIONS = 30;
+
     protected AdaptiveAiService $aiService;
 
     public function __construct(AdaptiveAiService $aiService)
@@ -22,7 +24,7 @@ class RetestController extends Controller
     }
 
     /**
-     * Tampilkan Halaman Retest (50 Soal PHP Berbeda dari Tes Awal).
+     * Tampilkan paket retest dengan maksimal 30 soal.
      */
     public function index()
     {
@@ -35,26 +37,50 @@ class RetestController extends Controller
         }
 
         $questions = Question::where('exam_type', 'retest')
-            ->orderBy('id', 'asc')
-            ->take(50)
+            ->inRandomOrder()
+            ->take(self::MAX_QUESTIONS)
             ->get();
+
+        if ($questions->isEmpty()) {
+            abort(503, 'Bank soal retest belum tersedia.');
+        }
+
+        session(['retest_question_ids' => $questions->pluck('id')->all()]);
 
         return view('retest.index', compact('questions', 'initial'));
     }
 
     /**
-     * Proses Submit Retest 50 Soal.
+     * Nilai jawaban hanya untuk soal yang ditampilkan pada paket retest.
      */
     public function submit(Request $request)
     {
         $request->validate([
-            'answers' => 'required|array',
+            'answers' => 'required|array|max:'.self::MAX_QUESTIONS,
+            'answers.*' => 'nullable|in:A,B,C,D',
         ]);
 
         $userId = Auth::id() ?? 1;
         $initial = Assessment::where('user_id', $userId)->latest()->firstOrFail();
         $submittedAnswers = $request->input('answers', []);
-        $questions = Question::where('exam_type', 'retest')->take(50)->get();
+        $questionIds = session('retest_question_ids');
+
+        if (! is_array($questionIds) || count($questionIds) < 1 || count($questionIds) > self::MAX_QUESTIONS) {
+            abort(409, 'Paket soal retest tidak ditemukan. Silakan mulai retest kembali.');
+        }
+
+        $questionsById = Question::where('exam_type', 'retest')
+            ->whereIn('id', $questionIds)
+            ->get()
+            ->keyBy('id');
+
+        if ($questionsById->count() !== count($questionIds)) {
+            abort(409, 'Bank soal berubah selama retest berlangsung. Silakan mulai retest kembali.');
+        }
+
+        $questions = collect($questionIds)
+            ->map(static fn ($id) => $questionsById->get($id))
+            ->values();
 
         $correctCount = 0;
         $totalQuestions = $questions->count();
@@ -78,7 +104,7 @@ class RetestController extends Controller
             }
 
             $score = $totalQuestions > 0 ? (int) round(($correctCount / $totalQuestions) * 100) : 0;
-            $level = $this->aiService->determineLevel($score);
+            $level = $this->aiService->determineLevel($score, $topicMap);
             $scoreDiff = $score - $initial->score;
 
             // Buat komparasi per topik
@@ -98,7 +124,8 @@ class RetestController extends Controller
                 ];
 
                 // Jika topik skill gap naik >= 70%, tandai resolved
-                if ($retestPerc >= 70) {
+                $targetScore = $initial->level === 'Beginner' ? 60 : 80;
+                if ($retestPerc >= $targetScore) {
                     SkillGap::where('user_id', $userId)
                         ->where('topic', $topic)
                         ->update(['status' => 'resolved']);
@@ -135,6 +162,7 @@ class RetestController extends Controller
             }
 
             DB::commit();
+            session()->forget('retest_question_ids');
 
             if ($request->wantsJson()) {
                 return response()->json([

@@ -18,6 +18,8 @@ class Assessment extends Model
         'topic_scores',
         'ai_summary',
         'ai_action_plan',
+        'ai_source',
+        'ai_provider',
         'completed_at',
     ];
 
@@ -44,5 +46,10 @@ class Assessment extends Model
     public function retest()
     {
         return $this->hasOne(Retest::class, 'initial_assessment_id');
+    }
+
+    public function competencyResults()
+    {
+        return $this->hasMany(AssessmentCompetencyResult::class);
     }
 }

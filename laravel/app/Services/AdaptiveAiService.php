@@ -2,38 +2,51 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-
 class AdaptiveAiService
 {
-    /**
-     * Hitung level kemampuan berdasarkan skor.
-     * Score < 60  -> Beginner
-     * 60 <= Score < 80 -> Intermediate
-     * Score >= 80 -> Advanced
-     */
-    public function determineLevel(int $score): string
+    public function __construct(private readonly AiGateway $aiGateway)
     {
-        if ($score >= 80) {
-            return 'Advanced';
-        } elseif ($score >= 60) {
-            return 'Intermediate';
+    }
+
+    /**
+     * Tentukan level berdasarkan skor keseluruhan dan batas minimum setiap topik terukur.
+     */
+    public function determineLevel(int $score, array $topicScores = []): string
+    {
+        $measuredScores = [];
+        foreach ($topicScores as $topic) {
+            if (($topic['total'] ?? 0) > 0) {
+                $measuredScores[] = (int) round(($topic['correct'] / $topic['total']) * 100);
+            }
         }
-        return 'Beginner';
+
+        $meetsIntermediateTopicTarget = count($measuredScores) > 0 &&
+            !in_array(false, array_map(static fn ($topicScore) => $topicScore >= 60, $measuredScores), true);
+        $meetsAdvancedTopicTarget = count($measuredScores) > 0 &&
+            !in_array(false, array_map(static fn ($topicScore) => $topicScore >= 80, $measuredScores), true);
+
+        if ($score < 70 || !$meetsIntermediateTopicTarget) {
+            return 'Beginner';
+        }
+
+        if ($score >= 85 && $meetsAdvancedTopicTarget) {
+            return 'Advanced';
+        }
+        return 'Intermediate';
     }
 
     /**
      * Analisis diagnostik topik dan identifikasi skill gap.
      */
-    public function analyzeTopicPerformance(array $topicScores): array
+    public function analyzeTopicPerformance(array $topicScores, string $level = 'Beginner'): array
     {
         $skillGaps = [];
+        $target = $level === 'Beginner' ? 60 : 80;
 
         foreach ($topicScores as $topic => $data) {
             $percentage = $data['total'] > 0 ? round(($data['correct'] / $data['total']) * 100) : 0;
 
-            if ($percentage < 70) {
+            if ($percentage < $target) {
                 $priority = $percentage < 50 ? 'Tinggi' : 'Sedang';
                 $skillGaps[] = [
                     'topic' => $topic,
@@ -53,38 +66,17 @@ class AdaptiveAiService
     /**
      * Generate narasi analisis menggunakan Gemini API atau fallback engine lokal.
      */
-    public function generateAssessmentSummary(string $userName, int $score, string $level, array $skillGaps): array
+    public function generateAssessmentSummary(string $userName, int $score, string $level, array $skillGaps, array $topicScores = []): array
     {
-        $apiKey = config('services.gemini.api_key', env('GEMINI_API_KEY'));
+        $gapNames = array_column($skillGaps, 'topic');
+        $gapList = $gapNames !== [] ? implode(', ', array_slice($gapNames, 0, 3)) : 'konsep lanjutan';
+        $prompt = 'Kembalikan objek JSON valid dengan properti string summary dan action_plan. '
+            .'Tuliskan dalam Bahasa Indonesia, hubungkan analisis dengan skor total, level, seluruh skor per topik, dan skill gap berikut. '
+            .'Jangan mengubah nilai, jawaban, atau kunci assessment. Data: '
+            .json_encode(['name' => $userName, 'score' => $score, 'level' => $level, 'topicScores' => $topicScores, 'skillGaps' => $skillGaps], JSON_UNESCAPED_UNICODE).'.';
+        $ai = $this->aiGateway->generateStructuredAssessment($prompt);
+        if (($ai['source'] ?? null) === 'configured_ai') return $ai;
 
-        if ($apiKey) {
-            try {
-                $prompt = "Anda adalah AI evaluator sistem pembelajaran adaptif PHP. " .
-                          "Pengguna: {$userName}, Skor: {$score}/100, Level: {$level}. " .
-                          "Skill gap terdeteksi: " . json_encode($skillGaps) . ". " .
-                          "Berikan evaluasi kemampuan ringkas (2-3 kalimat) dan saran tindakan pembelajaran adaptif.";
-
-                $response = Http::withHeaders([
-                    'Content-Type' => 'application/json',
-                ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
-                    'contents' => [
-                        ['parts' => [['text' => $prompt]]]
-                    ]
-                ]);
-
-                if ($response->successful()) {
-                    $aiText = $response->json('candidates.0.content.parts.0.text');
-                    return [
-                        'summary' => $aiText,
-                        'action_plan' => "Fokuskan waktu belajar pada materi skill gap prioritas sebelum melakukan retest."
-                    ];
-                }
-            } catch (\Exception $e) {
-                Log::warning('Gemini API request failed: ' . $e->getMessage());
-            }
-        }
-
-        // Fallback cerdas lokal
         $gapNames = array_column($skillGaps, 'topic');
         $gapList = !empty($gapNames) ? implode(', ', array_slice($gapNames, 0, 3)) : 'konsep lanjutan';
 
@@ -96,7 +88,11 @@ class AdaptiveAiService
 
         return [
             'summary' => $summary,
-            'action_plan' => "Pelajari materi rekomendasi pada topik {$gapList}, tonton video pembelajaran terintegrasi, lalu validasi peningkatan melalui Retest 50 Soal."
+            'action_plan' => "Pelajari materi rekomendasi pada topik {$gapList}, lalu validasi peningkatan melalui retest maksimal 30 soal.",
+            'source' => $ai['source'] ?? 'local_engine',
+            'status' => $ai['status'] ?? 'not_configured',
+            'provider' => $ai['provider'] ?? null,
+            'provider_configured' => $ai['provider_configured'] ?? false,
         ];
     }
 
@@ -105,15 +101,34 @@ class AdaptiveAiService
      */
     public function generateComparativeAnalysis(int $initialScore, int $retestScore, array $topicComparisons): string
     {
+        return $this->generateComparativeAnalysisWithMetadata($initialScore, $retestScore, $topicComparisons)['summary'];
+    }
+
+    public function generateComparativeAnalysisWithMetadata(int $initialScore, int $retestScore, array $topicComparisons, array $progressContext = []): array
+    {
         $diff = $retestScore - $initialScore;
         $sign = $diff >= 0 ? "+{$diff}%" : "{$diff}%";
+        $prompt = 'Kembalikan objek JSON valid dengan satu properti string analysis. '
+            .'Tulis satu paragraf dalam Bahasa Indonesia berdasarkan perubahan skor dan skor tiap topik. '
+            .'Jangan mengubah nilai assessment. Data: '
+            .json_encode(['initialScore' => $initialScore, 'retestScore' => $retestScore, 'difference' => $diff, 'topicComparisons' => $topicComparisons, 'progressContext' => $progressContext], JSON_UNESCAPED_UNICODE).'.';
+        $ai = $this->aiGateway->generateStructuredComparison($prompt);
+        if (($ai['source'] ?? null) === 'configured_ai') return $ai;
 
         if ($diff > 0) {
-            return "Evaluasi komparatif mencatat peningkatan sebesar {$sign} dari assessment awal ({$initialScore}%) ke retest ({$retestScore}%). Hasil ini membuktikan efektivitas pemahaman konsep yang telah dipelajari dari materi rekomendasi.";
+            $summary = "Evaluasi komparatif mencatat peningkatan sebesar {$sign} dari assessment awal ({$initialScore}%) ke retest ({$retestScore}%). Periksa skor tiap topik untuk melihat materi yang paling berdampak.";
         } elseif ($diff === 0) {
-            return "Skor retest Anda konsisten stabil di angka {$retestScore}%. Penguasaan dasar telah kokoh, namun dianjurkan memperbanyak latihan studi kasus pada topik-topik berbobot tinggi.";
+            $summary = "Skor retest Anda konsisten stabil di angka {$retestScore}%. Perbanyak latihan pada topik yang masih berada di bawah target.";
+        } else {
+            $summary = "Skor retest Anda tercatat {$retestScore}% ({$sign} dibandingkan tes awal). Tinjau kembali topik dengan skor terendah sebelum retest berikutnya.";
         }
 
-        return "Skor retest Anda tercatat {$retestScore}% ({$sign} dibandingkan tes awal). Variasi tingkat kesulitan pada soal retest menguji pemahaman lebih dalam. Pelajari kembali materi modul yang belum tuntas.";
+        return [
+            'summary' => $summary,
+            'source' => $ai['source'] ?? 'local_engine',
+            'status' => $ai['status'] ?? 'not_configured',
+            'provider' => $ai['provider'] ?? null,
+            'provider_configured' => $ai['provider_configured'] ?? false,
+        ];
     }
 }

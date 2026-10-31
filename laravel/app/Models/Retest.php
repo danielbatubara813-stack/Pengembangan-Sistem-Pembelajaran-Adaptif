@@ -19,6 +19,8 @@ class Retest extends Model
         'score_difference',
         'topic_scores',
         'ai_comparative_analysis',
+        'ai_source',
+        'ai_provider',
         'completed_at',
     ];
 
@@ -40,5 +42,10 @@ class Retest extends Model
     public function answers()
     {
         return $this->hasMany(RetestAnswer::class);
+    }
+
+    public function competencyResults()
+    {
+        return $this->hasMany(AssessmentCompetencyResult::class);
     }
 }

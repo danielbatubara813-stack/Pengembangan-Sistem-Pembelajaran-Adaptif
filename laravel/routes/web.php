@@ -16,7 +16,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// 1. Assessment Awal 50 Soal
+// 1. Assessment Awal (10 soal per level)
 Route::prefix('assessment')->name('assessment.')->group(function () {
     Route::get('/', [AssessmentController::class, 'index'])->name('index');
     Route::post('/submit', [AssessmentController::class, 'submit'])->name('submit');
@@ -33,7 +33,7 @@ Route::prefix('recommendations')->name('recommendations.')->group(function () {
     Route::post('/toggle-complete/{id}', [RecommendationController::class, 'toggleComplete'])->name('toggle');
 });
 
-// 4. Retest 50 Soal PHP
+// 4. Retest maksimal 30 soal PHP
 Route::prefix('retest')->name('retest.')->group(function () {
     Route::get('/', [RetestController::class, 'index'])->name('index');
     Route::post('/submit', [RetestController::class, 'submit'])->name('submit');

@@ -23,6 +23,14 @@ export interface User {
   institution?: string;
 }
 
+export interface CompletedMaterial {
+  id: string;
+  title: string;
+  topic: string;
+  kind?: 'source' | 'example' | 'exercise' | null;
+  completedAt?: string;
+}
+
 export interface QuestionOption {
   key: 'A' | 'B' | 'C' | 'D';
   text: string;
@@ -39,6 +47,8 @@ export interface Question {
   type: 'multiple_choice';
   explanation?: string;
 }
+
+export type PublicQuestion = Omit<Question, 'correct_answer'>;
 
 export interface AnswerRecord {
   question_id: number;
@@ -61,6 +71,23 @@ export interface SkillGapItem {
   priority: 'Tinggi' | 'Sedang' | 'Rendah';
   summary: string;
   recommendationFocus: string;
+  competencyKey?: string;
+  competencyName?: string;
+  learningObjective?: string;
+  exampleCode?: string | null;
+  practicePrompt?: string | null;
+  targetScore?: number;
+  resultId?: number;
+  difficultyScores?: Record<string, { total: number; correct: number; score: number }>;
+  evidence?: Array<{ questionId: number; difficulty: string; isCorrect: boolean; question: string }>;
+  status?: 'mastered' | 'needs_review';
+}
+
+export interface CompetencyStatus {
+  status: 'mastered' | 'needs_review' | 'not_assessed';
+  score: number;
+  targetScore: number;
+  evaluatedAt: string | null;
 }
 
 export type RecommendationType =
@@ -83,6 +110,30 @@ export interface Recommendation {
   readTime?: string;
   estimatedMinutes?: number;
   completed?: boolean;
+  reason?: string;
+  priority?: 'Tinggi' | 'Sedang' | 'Rendah';
+  sequence?: number;
+  targetScore?: number;
+  prerequisiteTopics?: PHPTopic[];
+  linkKind?: 'direct' | 'search';
+  competencyKey?: string;
+  competencyName?: string;
+  learningObjective?: string;
+  exampleCode?: string | null;
+  practicePrompt?: string | null;
+  sourceDomain?: string;
+  validationStatus?: string;
+  contentStatus?: string;
+  embeddingStatus?: string;
+  matchScore?: number;
+  validation?: {
+    urlValid: boolean;
+    pageReachable: boolean;
+    contentRelevant: boolean;
+    videoPlayable: boolean;
+    httpStatus: number | null;
+  };
+  gap?: SkillGapItem;
 }
 
 export interface AssessmentResult {
@@ -102,6 +153,10 @@ export interface AssessmentResult {
     strengths: string[];
     weaknesses: string[];
     actionPlan: string;
+    source?: 'configured_ai' | 'local_engine' | 'provider_failure_fallback' | 'invalid_response_fallback' | 'legacy_unknown' | string;
+    status?: 'succeeded' | 'not_configured' | 'provider_failed' | 'invalid_response' | 'unknown' | string;
+    provider?: 'gemini' | 'openrouter' | null;
+    providerConfigured?: boolean;
   };
 }
 
@@ -118,7 +173,7 @@ export interface RetestComparison {
     initialPercentage: number;
     retestPercentage: number;
     difference: number;
-    status: 'Meningkat' | 'Stabil' | 'Menurun';
+    status: 'Meningkat' | 'Stabil' | 'Menurun' | 'Belum diuji';
   }>;
   aiComparativeAnalysis: string;
   resolvedSkillGaps: string[];
@@ -131,5 +186,5 @@ export interface HistoryItem {
   type: 'Assessment Awal' | 'Retest';
   score: number;
   level: PHPDifficulty;
-  status: 'Selesai' | 'Dianalisis AI';
+  status: 'Selesai' | 'Dianalisis AI' | 'Analisis aturan' | 'Fallback: provider gagal' | 'Fallback: respons AI tidak valid' | 'Status AI tidak tercatat';
 }

@@ -1,0 +1,151 @@
+﻿No,Level,Topik,Jenis Soal,Pertanyaan,Potongan Kode,Pilihan A,Pilihan B,Pilihan C,Pilihan D,Kunci Jawaban,Pembahasan,Bobot
+1,Beginner,Variabel,Coding,Apa output dari kode berikut?,"$nama = ""Budi"";
+echo $nama;",nama,$nama,Tidak ada output,Budi,D,"echo menampilkan nilai variabel $nama, yaitu Budi.",1
+2,Beginner,Sintaks PHP,Konsep,Tag pembuka PHP yang umum digunakan adalah ...,,<script php>,<?,<?php,<php>,C,Kode PHP umumnya diawali dengan <?php.,1
+3,Beginner,Tipe Data,Coding,Apa output dari kode berikut?,"$umur = 20;
+echo gettype($umur);",string,double,boolean,integer,D,Angka bulat tanpa tanda kutip bertipe integer.,1
+4,Beginner,Variabel,Konsep,Manakah penulisan variabel PHP yang benar?,,"nama = ""Andi"";","var nama = ""Andi"";","$nama = ""Andi"";","#nama = ""Andi"";",C,Nama variabel PHP diawali tanda dolar ($).,1
+5,Beginner,Operator Aritmatika,Coding,Apa output dari kode berikut?,"$a = 7;
+$b = 3;
+echo $a % $b;",2,2.33,21,1,D,Operator % menghasilkan sisa pembagian; 7 dibagi 3 bersisa 1.,1
+6,Beginner,Komentar,Konsep,Sintaks komentar satu baris yang benar adalah ...,,<!-- komentar -->,##// komentar,** komentar **,// komentar,D,// dan # dapat digunakan untuk komentar satu baris PHP.,1
+7,Beginner,Penggabungan String,Coding,Apa output dari kode berikut?,"$depan = ""Halo"";
+$belakang = ""Dunia"";
+echo $depan . "" "" . $belakang;",Halo . Dunia,HaloDunia,Halo Dunia,Dunia Halo,C,Titik (.) menggabungkan string.,1
+8,Beginner,Output,Konsep,Fungsi/perintah yang dapat menampilkan teks ke output adalah ...,,input,display,echo,printline,C,echo adalah konstruksi bahasa untuk menampilkan output.,1
+9,Beginner,Percabangan if,Coding,Apa output dari kode berikut?,"$nilai = 80;
+if ($nilai >= 75) { echo ""Lulus""; } else { echo ""Remedial""; }",Lulus,80,Remedial,Tidak ada output,A,Nilai 80 memenuhi kondisi nilai >= 75.,1
+10,Beginner,Tipe Data,Konsep,Nilai true termasuk tipe data ...,,Integer,Array,Boolean,String,C,true dan false adalah nilai boolean.,1
+11,Beginner,Perbandingan,Coding,Apa output dari kode berikut?,"$a = 5;
+$b = ""5"";
+var_dump($a == $b);",int(5),bool(false),"string(1) ""5""",bool(true),D,Operator == membandingkan nilai dengan konversi tipe tertentu.,1
+12,Beginner,String,Konsep,"Nilai ""123"" dengan tanda kutip termasuk tipe ...",,Boolean,Float,Integer,String,D,Teks di dalam tanda kutip merupakan string.,1
+13,Beginner,Perbandingan Identik,Coding,Apa output dari kode berikut?,"$a = 5;
+$b = ""5"";
+var_dump($a === $b);",Tidak ada output,bool(true),bool(false),int(0),C,Operator === membandingkan nilai sekaligus tipe data.,1
+14,Beginner,Operator,Konsep,Operator untuk mendapatkan sisa hasil bagi adalah ...,,*,//,/,%,D,Operator modulus (%) menghasilkan sisa pembagian.,1
+15,Beginner,Array,Coding,Apa output dari kode berikut?,"$buah = [""apel"", ""jeruk"", ""mangga""];
+echo $buah[1];",jeruk,apel,1,mangga,A,"Indeks array numerik dimulai dari 0, sehingga indeks 1 berisi jeruk.",1
+16,Beginner,Percabangan,Konsep,Struktur yang digunakan untuk memilih tindakan berdasarkan kondisi adalah ...,,include_once,if...else,echo,foreach,B,if/else menjalankan blok berdasarkan kondisi.,1
+17,Beginner,Count Array,Coding,Apa output dari kode berikut?,"$angka = [2, 4, 6, 8];
+echo count($angka);",3,4.0,8,4,D,count() menghitung jumlah elemen array.,1
+18,Beginner,Switch,Konsep,Struktur yang cocok untuk memilih satu dari banyak nilai tetap adalah ...,,strlen,return,switch,while,C,switch mengevaluasi ekspresi terhadap beberapa case.,1
+19,Beginner,Foreach,Coding,Apa output dari kode berikut?,"$angka = [1, 2, 3];
+foreach ($angka as $n) { echo $n; }",321,6,1 2 3,123,D,foreach membaca elemen berurutan dan echo tidak menambahkan spasi atau baris baru.,1
+20,Beginner,Array,Konsep,Indeks pertama array numerik PHP adalah ...,,0,1,-1,Tidak memiliki indeks,A,Indeks array numerik dimulai dari nol.,1
+21,Beginner,For Loop,Coding,Apa output dari kode berikut?,for ($i = 1; $i <= 3; $i++) { echo $i; },123,1234,321,0123,A,"Perulangan berjalan untuk i = 1, 2, dan 3.",1
+22,Beginner,Array Asosiatif,Konsep,Array asosiatif mengakses elemen menggunakan ...,,Key,Nama file,Nama fungsi,Hanya indeks angka,A,Array asosiatif memakai key yang ditentukan.,1
+23,Beginner,While Loop,Coding,Berapa kali teks 'Hai' ditampilkan?,"$i = 0;
+while ($i < 4) { echo ""Hai""; $i++; }",3 kali,Tidak terbatas,5 kali,4 kali,D,Nilai i dimulai dari 0 dan loop berjalan selama i < 4.,1
+24,Beginner,Perulangan,Konsep,Perulangan yang umum digunakan saat jumlah iterasi diketahui adalah ...,,switch,echo,for,if,C,"for cocok untuk iterasi dengan inisialisasi, kondisi, dan pembaruan.",1
+25,Beginner,Fungsi,Coding,Apa output dari kode berikut?,"function tambah($a, $b) { return $a + $b; }
+echo tambah(2, 5);",2 + 5,7,25,Tidak ada output,B,Fungsi mengembalikan hasil penjumlahan 2 dan 5.,1
+26,Beginner,Foreach,Konsep,foreach terutama digunakan untuk ...,,Membuat class,Membaca file konfigurasi saja,Menelusuri elemen array,Menghentikan program,C,foreach menelusuri array atau objek iterable.,1
+27,Beginner,Parameter Default,Coding,Apa output dari kode berikut?,"function sapa($nama = ""Teman"") { return ""Halo "" . $nama; }
+echo sapa();",Error,Teman,Halo,Halo Teman,D,Parameter nama memiliki nilai default Teman.,1
+28,Beginner,Fungsi,Konsep,Kata kunci untuk mengembalikan nilai dari fungsi adalah ...,,echo,global,return,break,C,return mengirim nilai kembali ke pemanggil fungsi.,1
+29,Beginner,String Length,Coding,Apa output dari kode berikut?,"echo strlen(""PHP"");",PHP,2,3,4,C,strlen() menghitung jumlah byte karakter pada string ASCII PHP.,1
+30,Beginner,Parameter,Konsep,Parameter fungsi adalah ...,,Variabel penerima nilai masukan fungsi,Nilai yang selalu dicetak,Nama file PHP,Komentar fungsi,A,Parameter menerima nilai yang dikirim saat fungsi dipanggil.,1
+31,Beginner,String Uppercase,Coding,Apa output dari kode berikut?,"echo strtoupper(""php"");",Php,PHP,Error,php,B,strtoupper() mengubah huruf menjadi kapital.,1
+32,Beginner,String Function,Konsep,Fungsi untuk menghitung panjang string adalah ...,,strlen(),length(),sizeof_string(),count(),A,strlen() mengembalikan panjang string dalam byte.,1
+33,Beginner,Konversi Tipe,Coding,Apa output dari kode berikut?,"$angka = ""12"";
+echo (int)$angka + 3;",15,123,12,Error,A,"String numerik dikonversi menjadi integer 12, lalu ditambah 3.",1
+34,Beginner,Debugging,Konsep,var_dump() berguna untuk ...,,Menghapus variabel,Membuat database,Menampilkan informasi tipe dan nilai variabel,Mengenkripsi data,C,var_dump menampilkan struktur dan tipe nilai.,1
+35,Beginner,Null Coalescing,Coding,Apa output dari kode berikut?,"$nama = null;
+echo $nama ?? ""Anonim"";",null,0,Anonim,Error,C,Operator ?? memakai nilai di kanan jika nilai kiri null atau tidak tersedia.,1
+36,Beginner,Superglobal,Konsep,$_GET biasanya mengambil data yang dikirim melalui ...,,Cookie saja,File PHP lokal,Variabel class,Parameter URL/query string,D,$_GET berisi variabel dari query string URL.,1
+37,Beginner,Operator Logika,Coding,Apa output dari kode berikut?,"$a = true;
+$b = false;
+var_dump($a && $b);",bool(true),bool(false),false,Error,B,Operator && bernilai true hanya jika kedua kondisi true.,1
+38,Beginner,Form,Konsep,Metode HTTP yang umumnya tidak menampilkan data form pada URL adalah ...,,POST,TRACE,GET,OPTIONS,A,"POST mengirim data pada body request, bukan query URL.",1
+39,Beginner,Associative Array,Coding,Apa output dari kode berikut?,"$user = [""nama"" => ""Rina"", ""umur"" => 19];
+echo $user[""nama""];",nama,Rina,umur,19,B,Array asosiatif mengakses nilai melalui key nama.,1
+40,Beginner,Include,Konsep,Perintah untuk menyertakan file PHP adalah ...,,require_html,import_php,attach,include,D,include menyertakan dan mengevaluasi file yang ditentukan.,1
+41,Beginner,Function Return,Coding,Apa output dari kode berikut?,"function kuadrat($n) { return $n * $n; }
+echo kuadrat(4);",4,8,16,44,C,Fungsi mengalikan 4 dengan dirinya sendiri.,1
+42,Beginner,Keamanan,Konsep,Fungsi yang membantu mengamankan teks sebelum ditampilkan dalam HTML adalah ...,,strtoupper(),strlen(),htmlspecialchars(),count(),C,htmlspecialchars mengubah karakter khusus HTML agar tidak ditafsirkan sebagai markup.,1
+43,Beginner,Break Loop,Coding,Apa output dari kode berikut?,for ($i = 1; $i <= 5; $i++) { if ($i == 3) break; echo $i; },3,12345,1245,12,D,break menghentikan loop saat i bernilai 3.,1
+44,Beginner,Database,Konsep,PDO pada PHP digunakan untuk ...,,Menjalankan loop otomatis,Mengakses database melalui abstraksi koneksi,Mengatur CSS,Membuat animasi,B,PDO menyediakan antarmuka akses database.,1
+45,Beginner,Continue Loop,Coding,Apa output dari kode berikut?,for ($i = 1; $i <= 4; $i++) { if ($i == 2) continue; echo $i; },1234,134,13,24,B,continue melewati iterasi ketika i bernilai 2.,1
+46,Beginner,File PHP,Konsep,Ekstensi file PHP yang umum adalah ...,,.phtmlx,.php,.htmlphp,.ph,B,.php adalah ekstensi yang umum digunakan untuk skrip PHP.,1
+47,Beginner,Concatenation Assignment,Coding,Apa output dari kode berikut?,"$teks = ""Belajar"";
+$teks .= "" PHP"";
+echo $teks;",Error,BelajarPHP,PHP Belajar,Belajar PHP,D,Operator .= menambahkan string ke nilai sebelumnya.,1
+48,Beginner,Operator Identik,Konsep,Operator === membandingkan ...,,Hanya tipe data,Hanya panjang string,Nilai dan tipe data,Alamat file,C,,1
+49,Beginner,Date Function,Coding,Apa yang dikembalikan date('Y')?,echo date('Y');,Nama hari,Tahun saat ini dalam 4 digit,Nama bulan,Tanggal 1–31,B,Format Y menghasilkan tahun empat digit sesuai waktu server.,1
+50,Beginner,Error,Konsep,Kesalahan penulisan sintaks PHP disebut ...,,UI error,Network style,Design error,Syntax error,D,Syntax error muncul saat kode tidak mengikuti aturan sintaks.,1
+51,Beginner,Variabel,Coding,Apa output dari kode berikut?,"$nama = ""Budi"";
+echo $nama;",Tidak ada output,$nama,nama,Budi,D,"echo menampilkan nilai variabel $nama, yaitu Budi.",1
+52,Beginner,Sintaks PHP,Konsep,Tag pembuka PHP yang umum digunakan adalah ...,,<php>,<script php>,<?,<?php,D,Kode PHP umumnya diawali dengan <?php.,1
+53,Beginner,Tipe Data,Coding,Apa output dari kode berikut?,"$umur = 20;
+echo gettype($umur);",integer,double,boolean,string,A,Angka bulat tanpa tanda kutip bertipe integer.,1
+54,Beginner,Variabel,Konsep,Manakah penulisan variabel PHP yang benar?,,"$nama = ""Andi"";","var nama = ""Andi"";","#nama = ""Andi"";","nama = ""Andi"";",A,Nama variabel PHP diawali tanda dolar ($).,1
+55,Beginner,Operator Aritmatika,Coding,Apa output dari kode berikut?,"$a = 7;
+$b = 3;
+echo $a % $b;",21,1,2.33,2,B,Operator % menghasilkan sisa pembagian; 7 dibagi 3 bersisa 1.,1
+56,Beginner,Komentar,Konsep,Sintaks komentar satu baris yang benar adalah ...,,// komentar,##// komentar,<!-- komentar -->,** komentar **,A,// dan # dapat digunakan untuk komentar satu baris PHP.,1
+57,Beginner,Penggabungan String,Coding,Apa output dari kode berikut?,"$depan = ""Halo"";
+$belakang = ""Dunia"";
+echo $depan . "" "" . $belakang;",Halo Dunia,HaloDunia,Halo . Dunia,Dunia Halo,A,Titik (.) menggabungkan string.,1
+58,Beginner,Output,Konsep,Fungsi/perintah yang dapat menampilkan teks ke output adalah ...,,input,printline,display,echo,D,echo adalah konstruksi bahasa untuk menampilkan output.,1
+59,Beginner,Percabangan if,Coding,Apa output dari kode berikut?,"$nilai = 80;
+if ($nilai >= 75) { echo ""Lulus""; } else { echo ""Remedial""; }",80,Tidak ada output,Remedial,Lulus,D,Nilai 80 memenuhi kondisi nilai >= 75.,1
+60,Beginner,Tipe Data,Konsep,Nilai true termasuk tipe data ...,,Array,Boolean,Integer,String,B,true dan false adalah nilai boolean.,1
+61,Beginner,Perbandingan,Coding,Apa output dari kode berikut?,"$a = 5;
+$b = ""5"";
+var_dump($a == $b);",bool(false),int(5),"string(1) ""5""",bool(true),D,Operator == membandingkan nilai dengan konversi tipe tertentu.,1
+62,Beginner,String,Konsep,"Nilai ""123"" dengan tanda kutip termasuk tipe ...",,Boolean,Float,String,Integer,C,Teks di dalam tanda kutip merupakan string.,1
+63,Beginner,Perbandingan Identik,Coding,Apa output dari kode berikut?,"$a = 5;
+$b = ""5"";
+var_dump($a === $b);",bool(true),Tidak ada output,bool(false),int(0),C,Operator === membandingkan nilai sekaligus tipe data.,1
+64,Beginner,Operator,Konsep,Operator untuk mendapatkan sisa hasil bagi adalah ...,,%,/,//,*,A,Operator modulus (%) menghasilkan sisa pembagian.,1
+65,Beginner,Array,Coding,Apa output dari kode berikut?,"$buah = [""apel"", ""jeruk"", ""mangga""];
+echo $buah[1];",1,jeruk,mangga,apel,B,"Indeks array numerik dimulai dari 0, sehingga indeks 1 berisi jeruk.",1
+66,Beginner,Percabangan,Konsep,Struktur yang digunakan untuk memilih tindakan berdasarkan kondisi adalah ...,,echo,foreach,if...else,include_once,C,if/else menjalankan blok berdasarkan kondisi.,1
+67,Beginner,Count Array,Coding,Apa output dari kode berikut?,"$angka = [2, 4, 6, 8];
+echo count($angka);",3,8,4,4.0,C,count() menghitung jumlah elemen array.,1
+68,Beginner,Switch,Konsep,Struktur yang cocok untuk memilih satu dari banyak nilai tetap adalah ...,,return,strlen,while,switch,D,switch mengevaluasi ekspresi terhadap beberapa case.,1
+69,Beginner,Foreach,Coding,Apa output dari kode berikut?,"$angka = [1, 2, 3];
+foreach ($angka as $n) { echo $n; }",123,321,1 2 3,6,A,foreach membaca elemen berurutan dan echo tidak menambahkan spasi atau baris baru.,1
+70,Beginner,Array,Konsep,Indeks pertama array numerik PHP adalah ...,,1,0,-1,Tidak memiliki indeks,B,Indeks array numerik dimulai dari nol.,1
+71,Beginner,For Loop,Coding,Apa output dari kode berikut?,for ($i = 1; $i <= 3; $i++) { echo $i; },1234,0123,321,123,D,"Perulangan berjalan untuk i = 1, 2, dan 3.",1
+72,Beginner,Array Asosiatif,Konsep,Array asosiatif mengakses elemen menggunakan ...,,Hanya indeks angka,Nama file,Key,Nama fungsi,C,Array asosiatif memakai key yang ditentukan.,1
+73,Beginner,While Loop,Coding,Berapa kali teks 'Hai' ditampilkan?,"$i = 0;
+while ($i < 4) { echo ""Hai""; $i++; }",5 kali,Tidak terbatas,4 kali,3 kali,C,Nilai i dimulai dari 0 dan loop berjalan selama i < 4.,1
+74,Beginner,Perulangan,Konsep,Perulangan yang umum digunakan saat jumlah iterasi diketahui adalah ...,,switch,for,echo,if,B,"for cocok untuk iterasi dengan inisialisasi, kondisi, dan pembaruan.",1
+75,Beginner,Fungsi,Coding,Apa output dari kode berikut?,"function tambah($a, $b) { return $a + $b; }
+echo tambah(2, 5);",Tidak ada output,7,25,2 + 5,B,Fungsi mengembalikan hasil penjumlahan 2 dan 5.,1
+76,Beginner,Foreach,Konsep,foreach terutama digunakan untuk ...,,Menghentikan program,Membaca file konfigurasi saja,Membuat class,Menelusuri elemen array,D,foreach menelusuri array atau objek iterable.,1
+77,Beginner,Parameter Default,Coding,Apa output dari kode berikut?,"function sapa($nama = ""Teman"") { return ""Halo "" . $nama; }
+echo sapa();",Halo,Error,Teman,Halo Teman,D,Parameter nama memiliki nilai default Teman.,1
+78,Beginner,Fungsi,Konsep,Kata kunci untuk mengembalikan nilai dari fungsi adalah ...,,echo,break,global,return,D,return mengirim nilai kembali ke pemanggil fungsi.,1
+79,Beginner,String Length,Coding,Apa output dari kode berikut?,"echo strlen(""PHP"");",3,4,2,PHP,A,strlen() menghitung jumlah byte karakter pada string ASCII PHP.,1
+80,Beginner,Parameter,Konsep,Parameter fungsi adalah ...,,Nama file PHP,Variabel penerima nilai masukan fungsi,Komentar fungsi,Nilai yang selalu dicetak,B,Parameter menerima nilai yang dikirim saat fungsi dipanggil.,1
+81,Beginner,String Uppercase,Coding,Apa output dari kode berikut?,"echo strtoupper(""php"");",Php,PHP,Error,php,B,strtoupper() mengubah huruf menjadi kapital.,1
+82,Beginner,String Function,Konsep,Fungsi untuk menghitung panjang string adalah ...,,strlen(),sizeof_string(),count(),length(),A,strlen() mengembalikan panjang string dalam byte.,1
+83,Beginner,Konversi Tipe,Coding,Apa output dari kode berikut?,"$angka = ""12"";
+echo (int)$angka + 3;",15,Error,123,12,A,"String numerik dikonversi menjadi integer 12, lalu ditambah 3.",1
+84,Beginner,Debugging,Konsep,var_dump() berguna untuk ...,,Mengenkripsi data,Membuat database,Menampilkan informasi tipe dan nilai variabel,Menghapus variabel,C,var_dump menampilkan struktur dan tipe nilai.,1
+85,Beginner,Null Coalescing,Coding,Apa output dari kode berikut?,"$nama = null;
+echo $nama ?? ""Anonim"";",Error,0,Anonim,null,C,Operator ?? memakai nilai di kanan jika nilai kiri null atau tidak tersedia.,1
+86,Beginner,Superglobal,Konsep,$_GET biasanya mengambil data yang dikirim melalui ...,,Cookie saja,Variabel class,Parameter URL/query string,File PHP lokal,C,$_GET berisi variabel dari query string URL.,1
+87,Beginner,Operator Logika,Coding,Apa output dari kode berikut?,"$a = true;
+$b = false;
+var_dump($a && $b);",bool(true),bool(false),false,Error,B,Operator && bernilai true hanya jika kedua kondisi true.,1
+88,Beginner,Form,Konsep,Metode HTTP yang umumnya tidak menampilkan data form pada URL adalah ...,,GET,OPTIONS,TRACE,POST,D,"POST mengirim data pada body request, bukan query URL.",1
+89,Beginner,Associative Array,Coding,Apa output dari kode berikut?,"$user = [""nama"" => ""Rina"", ""umur"" => 19];
+echo $user[""nama""];",umur,19,Rina,nama,C,Array asosiatif mengakses nilai melalui key nama.,1
+90,Beginner,Include,Konsep,Perintah untuk menyertakan file PHP adalah ...,,attach,include,require_html,import_php,B,include menyertakan dan mengevaluasi file yang ditentukan.,1
+91,Beginner,Function Return,Coding,Apa output dari kode berikut?,"function kuadrat($n) { return $n * $n; }
+echo kuadrat(4);",4,16,44,8,B,Fungsi mengalikan 4 dengan dirinya sendiri.,1
+92,Beginner,Keamanan,Konsep,Fungsi yang membantu mengamankan teks sebelum ditampilkan dalam HTML adalah ...,,count(),strtoupper(),strlen(),htmlspecialchars(),D,htmlspecialchars mengubah karakter khusus HTML agar tidak ditafsirkan sebagai markup.,1
+93,Beginner,Break Loop,Coding,Apa output dari kode berikut?,for ($i = 1; $i <= 5; $i++) { if ($i == 3) break; echo $i; },3,12345,12,1245,C,break menghentikan loop saat i bernilai 3.,1
+94,Beginner,Database,Konsep,PDO pada PHP digunakan untuk ...,,Mengakses database melalui abstraksi koneksi,Mengatur CSS,Menjalankan loop otomatis,Membuat animasi,A,PDO menyediakan antarmuka akses database.,1
+95,Beginner,Continue Loop,Coding,Apa output dari kode berikut?,for ($i = 1; $i <= 4; $i++) { if ($i == 2) continue; echo $i; },134,13,24,1234,A,continue melewati iterasi ketika i bernilai 2.,1
+96,Beginner,File PHP,Konsep,Ekstensi file PHP yang umum adalah ...,,.phtmlx,.php,.ph,.htmlphp,B,.php adalah ekstensi yang umum digunakan untuk skrip PHP.,1
+97,Beginner,Concatenation Assignment,Coding,Apa output dari kode berikut?,"$teks = ""Belajar"";
+$teks .= "" PHP"";
+echo $teks;",PHP Belajar,Error,BelajarPHP,Belajar PHP,D,Operator .= menambahkan string ke nilai sebelumnya.,1
+98,Beginner,Operator Identik,Konsep,Operator === membandingkan ...,,Hanya tipe data,Alamat file,Hanya panjang string,Nilai dan tipe data,D,,1
+99,Beginner,Date Function,Coding,Apa yang dikembalikan date('Y')?,echo date('Y');,Nama hari,Nama bulan,Tahun saat ini dalam 4 digit,Tanggal 1–31,C,Format Y menghasilkan tahun empat digit sesuai waktu server.,1
+100,Beginner,Error,Konsep,Kesalahan penulisan sintaks PHP disebut ...,,Network style,UI error,Design error,Syntax error,D,Syntax error muncul saat kode tidak mengikuti aturan sintaks.,1

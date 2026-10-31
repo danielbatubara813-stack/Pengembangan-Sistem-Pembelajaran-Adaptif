@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
+import { requestApi } from '../services/api';
 import {
   Bot,
   Sparkles,
@@ -33,9 +34,9 @@ export const AICompanion: React.FC = () => {
   const getDefaultMessage = () => {
     switch (currentPage) {
       case 'landing':
-        return `Halo ${user?.name || 'Mahasiswa'}! Sistem ini akan memetakan kompetensi PHP Anda melalui 50 butir soal komprehensif berstandar industri.`;
+        return `Halo ${user?.name || 'Mahasiswa'}! Sistem ini akan memetakan kompetensi PHP Anda melalui 30 soal acak, masing-masing 10 dari level Beginner, Intermediate, dan Advanced.`;
       case 'assessment':
-        return 'Kerjakan 50 soal assessment awal ini dengan tenang. Setiap jawaban akan dianalisis oleh AI untuk memetakan level dan skill gap Anda.';
+        return 'Kerjakan 30 soal assessment awal ini dengan tenang. Ada 10 soal acak dari setiap level Beginner, Intermediate, dan Advanced.';
       case 'assessment_result':
         return `Analisis awal selesai! Anda berada di level ${initialResult?.level || 'Intermediate'} (${initialResult?.score || 0}%). Perhatikan skill gap untuk fokus belajar.`;
       case 'dashboard':
@@ -43,9 +44,9 @@ export const AICompanion: React.FC = () => {
       case 'recommendations':
         return 'Pilihlah salah satu topik di bawah. Anda bisa menonton video langsung di dalam sistem atau membaca dokumentasi resmi.';
       case 'learning_detail':
-        return 'Pahami konsep mendasar dan cermati jebakan kode (pitfalls) pada topik ini agar Anda siap menghadapi Retest 50 Soal.';
+        return 'Pahami konsep mendasar dan cermati jebakan kode (pitfalls) pada topik ini agar Anda siap menghadapi retest maksimal 30 soal.';
       case 'retest':
-        return 'Retest ini memuat 50 soal berbeda untuk menguji apakah pemahaman Anda pada topik skill gap telah meningkat secara nyata.';
+        return 'Retest ini memuat maksimal 30 soal berbeda untuk menguji apakah pemahaman Anda pada topik skill gap telah meningkat secara nyata.';
       case 'retest_result':
         return 'Luar biasa! Retest telah selesai. Cermati grafik perbandingan untuk melihat lonjakan nilai dan topik yang berhasil dituntaskan.';
       case 'progress':
@@ -62,7 +63,7 @@ export const AICompanion: React.FC = () => {
   const handleFetchAiHint = async () => {
     setIsLoadingTip(true);
     try {
-      const res = await fetch('/api/ai/companion-tip', {
+      const data = await requestApi<{ tip?: string }>('/api/ai/companion-tip', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -72,7 +73,6 @@ export const AICompanion: React.FC = () => {
           skillGaps: initialResult?.skillGaps || []
         })
       });
-      const data = await res.json();
       if (data.tip) {
         setCustomTip(data.tip);
       }
@@ -93,21 +93,21 @@ export const AICompanion: React.FC = () => {
     >
       <div className="pointer-events-auto max-w-sm sm:max-w-md">
         {isOpen ? (
-          <div className="bg-slate-900 text-slate-100 rounded-xl shadow-xl border border-slate-700/80 p-3.5 backdrop-blur-md">
+          <div className="bg-white text-slate-900 rounded-xl shadow-xl border border-slate-200 p-3.5 backdrop-blur-md">
             {/* Robot Header */}
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-200">
               <div className="flex items-center gap-2">
                 {/* Modern Robot Avatar */}
-                <div className="relative w-7 h-7 rounded-lg bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center">
-                  <Bot className="w-4 h-4 text-indigo-400" />
-                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <div className="relative w-7 h-7 rounded-lg bg-indigo-50 border border-indigo-200 flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-indigo-600" />
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-bold text-white tracking-wide">
+                    <span className="text-xs font-bold text-slate-900 tracking-wide">
                       AI Companion
                     </span>
-                    <span className="text-[9px] font-mono uppercase bg-indigo-950 text-indigo-300 px-1.5 py-0.2 rounded border border-indigo-800/60">
+                    <span className="text-[9px] font-mono uppercase bg-indigo-50 text-indigo-700 px-1.5 py-0.2 rounded border border-indigo-200">
                       Adaptive Bot
                     </span>
                   </div>
@@ -118,14 +118,14 @@ export const AICompanion: React.FC = () => {
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => setPosition((p) => (p === 'right' ? 'left' : 'right'))}
-                  className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                  className="p-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
                   title="Pindah Sisi (Kiri/Kanan)"
                 >
                   <MoveHorizontal className="w-3.5 h-3.5" />
                 </button>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                  className="p-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
                   title="Minimize"
                 >
                   <ChevronDown className="w-3.5 h-3.5" />
@@ -134,10 +134,10 @@ export const AICompanion: React.FC = () => {
             </div>
 
             {/* Robot Message Body */}
-            <div className="pt-2.5 text-xs text-slate-300 leading-relaxed font-normal">
+            <div className="pt-2.5 text-xs text-slate-700 leading-relaxed font-normal">
               {isLoadingTip ? (
-                <div className="flex items-center gap-2 py-1 text-slate-400">
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-spin" />
+                <div className="flex items-center gap-2 py-1 text-slate-600">
+                  <Sparkles className="w-3.5 h-3.5 text-indigo-600 animate-spin" />
                   <span>AI Companion sedang menganalisis konteks...</span>
                 </div>
               ) : (
@@ -146,20 +146,20 @@ export const AICompanion: React.FC = () => {
             </div>
 
             {/* Quick Action Footer */}
-            <div className="mt-2.5 pt-2 border-t border-slate-800/70 flex items-center justify-between text-[11px]">
+            <div className="mt-2.5 pt-2 border-t border-slate-200 flex items-center justify-between text-[11px]">
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleFetchAiHint}
                   disabled={isLoadingTip}
-                  className="flex items-center gap-1 text-indigo-300 hover:text-indigo-200 font-medium transition-colors cursor-pointer"
+                  className="flex items-center gap-1 text-indigo-700 hover:text-indigo-800 font-medium transition-colors cursor-pointer"
                 >
-                  <Lightbulb className="w-3 h-3 text-amber-400" />
+                  <Lightbulb className="w-3 h-3 text-indigo-600" />
                   <span>Petunjuk AI</span>
                 </button>
 
                 <button
                   onClick={openLaravelSpec}
-                  className="text-rose-400 hover:text-rose-300 transition-colors cursor-pointer underline text-[10px]"
+                  className="text-red-600 hover:text-red-700 transition-colors cursor-pointer underline text-[10px]"
                   title="Buka Skema Migrasi dan Arsitektur Laravel 11"
                 >
                   Arsitektur Laravel
@@ -175,14 +175,14 @@ export const AICompanion: React.FC = () => {
           /* Minimized Floating Button */
           <button
             onClick={() => setIsOpen(true)}
-            className="flex items-center gap-2.5 bg-slate-900 text-white px-3 py-2 rounded-full shadow-lg border border-slate-700 hover:bg-slate-800 hover:border-indigo-500 transition-all cursor-pointer group"
+            className="flex items-center gap-2.5 bg-indigo-600 text-white px-3 py-2 rounded-full shadow-lg border border-indigo-600 hover:bg-indigo-700 hover:border-indigo-700 transition-all cursor-pointer group"
           >
-            <div className="relative w-6 h-6 rounded-md bg-indigo-600/30 flex items-center justify-center">
-              <Bot className="w-3.5 h-3.5 text-indigo-400 group-hover:scale-110 transition-transform" />
-              <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <div className="relative w-6 h-6 rounded-md bg-white/20 flex items-center justify-center">
+              <Bot className="w-3.5 h-3.5 text-white group-hover:scale-110 transition-transform" />
+              <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-emerald-600 animate-ping"></span>
             </div>
             <span className="text-xs font-semibold pr-1">AI Companion</span>
-            <ChevronUp className="w-3.5 h-3.5 text-slate-400" />
+            <ChevronUp className="w-3.5 h-3.5 text-white" />
           </button>
         )}
       </div>

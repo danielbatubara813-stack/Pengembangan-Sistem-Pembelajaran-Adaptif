@@ -63,7 +63,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->integer('score');
-            $table->integer('total_questions')->default(50);
+            $table->integer('total_questions')->default(30);
             $table->integer('correct_count');
             $table->enum('level', ['Beginner', 'Intermediate', 'Advanced']);
             $table->json('topic_scores')->nullable();
@@ -104,7 +104,7 @@ return new class extends Migration
             $table->foreignId('initial_assessment_id')->constrained('assessments')->cascadeOnDelete();
             $table->integer('score');
             $table->integer('correct_count');
-            $table->integer('total_questions')->default(50);
+            $table->integer('total_questions')->default(30);
             $table->enum('level', ['Beginner', 'Intermediate', 'Advanced']);
             $table->integer('score_difference');
             $table->json('topic_scores')->nullable();
@@ -199,7 +199,7 @@ class Assessment extends Model
       name: 'AssessmentController.php',
       path: 'app/Http/Controllers/AssessmentController.php',
       language: 'php',
-      description: 'Logika penanganan submit 50 soal, penilaian adaptif, identifikasi skill gap, dan redirect ke hasil.',
+      description: 'Logika penanganan 30 soal acak (10 per level), penilaian adaptif, identifikasi skill gap, dan redirect ke hasil.',
       content: `<?php
 
 namespace App\Http\Controllers;
@@ -224,10 +224,16 @@ class AssessmentController extends Controller
 
     public function index()
     {
-        $questions = Question::where('exam_type', 'initial')
-            ->orderBy('id', 'asc')
-            ->take(50)
-            ->get();
+        $questions = collect(['Beginner', 'Intermediate', 'Advanced'])
+            ->flatMap(fn ($level) => Question::where('exam_type', 'initial')
+                ->where('source', 'csv_bank')
+                ->where('difficulty', $level)
+                ->inRandomOrder()
+                ->take(10)
+                ->get())
+            ->shuffle()
+            ->values();
+        session(['initial_assessment_question_ids' => $questions->pluck('id')->all()]);
 
         return view('assessment.index', compact('questions'));
     }
@@ -236,7 +242,10 @@ class AssessmentController extends Controller
     {
         $request->validate(['answers' => 'required|array']);
         $submittedAnswers = $request->input('answers', []);
-        $questions = Question::where('exam_type', 'initial')->take(50)->get();
+        $questions = Question::where('exam_type', 'initial')
+            ->where('source', 'csv_bank')
+            ->whereIn('id', session('initial_assessment_question_ids', []))
+            ->get();
 
         $correctCount = 0;
         $totalQuestions = $questions->count();
@@ -259,8 +268,8 @@ class AssessmentController extends Controller
             }
 
             $score = $totalQuestions > 0 ? (int) round(($correctCount / $totalQuestions) * 100) : 0;
-            $level = $this->aiService->determineLevel($score);
-            $skillGapsData = $this->aiService->analyzeTopicPerformance($topicMap);
+            $level = $this->aiService->determineLevel($score, $topicMap);
+            $skillGapsData = $this->aiService->analyzeTopicPerformance($topicMap, $level);
             $aiAnalysis = $this->aiService->generateAssessmentSummary(Auth::user()?->name ?? 'Mahasiswa', $score, $level, $skillGapsData);
 
             $assessment = Assessment::create([
@@ -317,26 +326,33 @@ class AssessmentController extends Controller
       name: 'AdaptiveAiService.php',
       path: 'app/Services/AdaptiveAiService.php',
       language: 'php',
-      description: 'Service penentu level (<60 Beginner, 60-79 Intermediate, >=80 Advanced), diagnostik skill gap, dan integrasi Gemini LLM.',
+      description: 'Service klasifikasi Beginner, Intermediate, dan Advanced berdasarkan skor serta batas minimum topik, analisis skill gap, dan integrasi Gemini LLM.',
       content: `<?php
 
 namespace App\Services;
 
 class AdaptiveAiService
 {
-    public function determineLevel(int $score): string
+    public function determineLevel(int $score, array $topicScores): string
     {
-        if ($score >= 80) return 'Advanced';
-        if ($score >= 60) return 'Intermediate';
-        return 'Beginner';
+        $scores = [];
+        foreach ($topicScores as $topic) {
+            if ($topic['total'] > 0) {
+                $scores[] = round(($topic['correct'] / $topic['total']) * 100);
+            }
+        }
+        if ($score < 70 || empty($scores) || min($scores) < 60) return 'Beginner';
+        if ($score >= 85 && min($scores) >= 80) return 'Advanced';
+        return 'Intermediate';
     }
 
-    public function analyzeTopicPerformance(array $topicScores): array
+    public function analyzeTopicPerformance(array $topicScores, string $level): array
     {
         $skillGaps = [];
+        $target = $level === 'Beginner' ? 60 : 80;
         foreach ($topicScores as $topic => $data) {
             $percentage = $data['total'] > 0 ? round(($data['correct'] / $data['total']) * 100) : 0;
-            if ($percentage < 70) {
+            if ($percentage < $target) {
                 $skillGaps[] = [
                     'topic' => $topic,
                     'score' => $percentage,
@@ -362,7 +378,7 @@ class AdaptiveAiService
 
         return [
             'summary' => $summary,
-            'action_plan' => "Pelajari materi rekomendasi pada topik {$gapList} sebelum mengikuti Retest 50 Soal."
+            'action_plan' => "Pelajari materi rekomendasi pada topik {$gapList} sebelum mengikuti retest maksimal 30 soal."
         ];
     }
 
@@ -407,7 +423,7 @@ Route::prefix('recommendations')->name('recommendations.')->group(function () {
     Route::post('/toggle-complete/{id}', [RecommendationController::class, 'toggleComplete'])->name('toggle');
 });
 
-// 4. Retest 50 Soal
+// 4. Retest maksimal 30 soal
 Route::prefix('retest')->name('retest.')->group(function () {
     Route::get('/', [RetestController::class, 'index'])->name('index');
     Route::post('/submit', [RetestController::class, 'submit'])->name('submit');
@@ -480,7 +496,7 @@ Route::prefix('retest')->name('retest.')->group(function () {
                     <span className={`text-[10px] font-semibold block uppercase tracking-wider ${isActive ? 'text-indigo-300' : 'text-slate-400'}`}>
                       {file.category}
                     </span>
-                    <span className="font-mono font-bold truncate block mt-0.5">
+                    <span className="font-mono font-bold break-all block mt-0.5">
                       {file.name}
                     </span>
                   </div>
@@ -505,7 +521,7 @@ Route::prefix('retest')->name('retest.')->group(function () {
           <div className="md:col-span-8 flex flex-col h-full bg-slate-950 overflow-hidden">
             {/* Code Bar Header */}
             <div className="px-4 py-2.5 bg-slate-900 border-b border-slate-800 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2 font-mono text-slate-300 truncate">
+              <div className="flex items-center gap-2 font-mono text-slate-300 min-w-0 break-all">
                 <FileCode className="w-4 h-4 text-indigo-400" />
                 <span className="font-semibold">{activeFile.path}</span>
               </div>

@@ -1,164 +1,71 @@
 import React, { useState } from 'react';
+import { ArrowRight, LockKeyhole, Mail, UserRound } from 'lucide-react';
+import { AuthLayout } from '../components/AuthLayout';
 import { useApp } from '../context/AppContext';
-import { UserCheck, ArrowRight, Lock, Mail, User, School, Sparkles } from 'lucide-react';
 
 export const RegisterPage: React.FC = () => {
   const { registerUser, navigateTo } = useApp();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [nim, setNim] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmation, setConfirmation] = useState('');
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [name, setName] = useState('Budi Pratama');
-  const [email, setEmail] = useState('budi.pratama@mhs.ac.id');
-  const [nim, setNim] = useState('22051204018');
-  const [password, setPassword] = useState('password123');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !email.trim()) return;
-    registerUser(name, email, nim);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (password.length < 8) {
+      setError('Kata sandi harus terdiri dari minimal 8 karakter.');
+      return;
+    }
+    if (password !== confirmation) {
+      setError('Konfirmasi kata sandi belum sama.');
+      return;
+    }
+    setError('');
+    setIsSubmitting(true);
+    try {
+      await registerUser(name.trim(), email.trim(), nim.trim(), password);
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : 'Akun belum dapat dibuat. Coba lagi.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="py-10 px-4 sm:px-6 w-full max-w-md mx-auto">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <div
-          className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 font-mono font-bold text-2xl shadow-lg"
-          style={{ backgroundColor: '#3B82F6', color: '#F8FAFC' }}
-        >
-          &lt;/&gt;
-        </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight" style={{ color: '#F8FAFC' }}>
-          Registrasi Mahasiswa
-        </h1>
-        <p className="text-xs sm:text-sm mt-1.5" style={{ color: '#94A3B8' }}>
-          Daftar untuk memulai pengukuran kemampuan adaptif pemrograman PHP
-        </p>
+    <AuthLayout
+      title="Setiap ahli pernah memulai dari nol."
+      footer={<p className="auth-legal">Sudah punya akun? <button onClick={() => navigateTo('login')}>Masuk di sini</button></p>}
+    >
+      <div className="auth-heading">
+        <span className="eyebrow">Mulai perjalananmu</span>
+        <h2>Buat ruang untuk tumbuh.</h2>
+        <p>Daftar gratis dan temukan titik awal kemampuan PHP-mu.</p>
       </div>
-
-      {/* Form Container */}
-      <div
-        className="p-6 sm:p-8 rounded-2xl shadow-xl space-y-4"
-        style={{
-          backgroundColor: '#111827', // Slate 900
-          border: '1px solid #1E293B' // Slate 800
-        }}
-      >
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold mb-1" style={{ color: '#F8FAFC' }}>
-              Nama Lengkap
-            </label>
-            <div className="relative">
-              <User className="w-4 h-4 absolute left-3 top-3" style={{ color: '#64748B' }} />
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Contoh: Budi Pratama"
-                className="w-full text-xs pl-9 pr-3 py-2.5 rounded-xl transition-all focus:outline-none"
-                style={{
-                  backgroundColor: '#1E293B',
-                  border: '1px solid #334155',
-                  color: '#F8FAFC'
-                }}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold mb-1" style={{ color: '#F8FAFC' }}>
-              NIM / Nomor Induk Mahasiswa
-            </label>
-            <div className="relative">
-              <School className="w-4 h-4 absolute left-3 top-3" style={{ color: '#64748B' }} />
-              <input
-                type="text"
-                required
-                value={nim}
-                onChange={(e) => setNim(e.target.value)}
-                placeholder="Contoh: 22051204018"
-                className="w-full text-xs pl-9 pr-3 py-2.5 rounded-xl transition-all focus:outline-none"
-                style={{
-                  backgroundColor: '#1E293B',
-                  border: '1px solid #334155',
-                  color: '#F8FAFC'
-                }}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold mb-1" style={{ color: '#F8FAFC' }}>
-              Alamat Email Kampus
-            </label>
-            <div className="relative">
-              <Mail className="w-4 h-4 absolute left-3 top-3" style={{ color: '#64748B' }} />
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="budi@kampus.ac.id"
-                className="w-full text-xs pl-9 pr-3 py-2.5 rounded-xl transition-all focus:outline-none"
-                style={{
-                  backgroundColor: '#1E293B',
-                  border: '1px solid #334155',
-                  color: '#F8FAFC'
-                }}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold mb-1" style={{ color: '#F8FAFC' }}>
-              Kata Sandi
-            </label>
-            <div className="relative">
-              <Lock className="w-4 h-4 absolute left-3 top-3" style={{ color: '#64748B' }} />
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Minimal 6 karakter"
-                className="w-full text-xs pl-9 pr-3 py-2.5 rounded-xl transition-all focus:outline-none"
-                style={{
-                  backgroundColor: '#1E293B',
-                  border: '1px solid #334155',
-                  color: '#F8FAFC'
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="pt-2">
-            <button
-              type="submit"
-              className="w-full flex items-center justify-center gap-2 font-semibold text-xs py-3 rounded-xl shadow-md transition-all cursor-pointer hover:opacity-95"
-              style={{
-                backgroundColor: '#3B82F6', // Blue 500
-                color: '#F8FAFC'
-              }}
-            >
-              <span>Daftar &amp; Mulai 50 Soal Assessment</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </form>
-
-        <div className="pt-4 text-center" style={{ borderTop: '1px solid #1E293B' }}>
-          <p className="text-xs" style={{ color: '#94A3B8' }}>
-            Sudah memiliki akun?{' '}
-            <button
-              onClick={() => navigateTo('login')}
-              className="font-bold hover:underline cursor-pointer"
-              style={{ color: '#3B82F6' }}
-            >
-              Masuk di sini
-            </button>
-          </p>
-        </div>
-      </div>
-    </div>
+      <form onSubmit={handleSubmit} className="auth-form">
+        <label>Nama lengkap
+          <span className="auth-input"><UserRound size={16} /><input autoComplete="name" required value={name} onChange={(event) => setName(event.target.value)} placeholder="Nama lengkap" /></span>
+        </label>
+        <label>Email
+          <span className="auth-input"><Mail size={16} /><input type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="nama@email.com" /></span>
+        </label>
+        <label>NIM <span className="auth-muted">(opsional)</span>
+          <span className="auth-input"><UserRound size={16} /><input autoComplete="off" value={nim} onChange={(event) => setNim(event.target.value)} placeholder="Nomor induk mahasiswa" /></span>
+        </label>
+        <label>Kata sandi
+          <span className="auth-input"><LockKeyhole size={16} /><input type="password" autoComplete="new-password" minLength={8} required value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Minimal 8 karakter" /></span>
+        </label>
+        <label>Konfirmasi kata sandi
+          <span className="auth-input"><LockKeyhole size={16} /><input type="password" autoComplete="new-password" required value={confirmation} onChange={(event) => setConfirmation(event.target.value)} placeholder="Ulangi kata sandi" /></span>
+        </label>
+        {error && <p role="alert" className="auth-error">{error}</p>}
+        <label className="auth-checkbox"><input type="checkbox" required /> Saya menyetujui Ketentuan Penggunaan dan Kebijakan Privasi.</label>
+        <button className="button-primary auth-submit" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Membuat akun...' : 'Buat akun & mulai tes awal'} <ArrowRight size={17} />
+        </button>
+      </form>
+    </AuthLayout>
   );
 };

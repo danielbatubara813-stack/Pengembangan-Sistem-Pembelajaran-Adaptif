@@ -43,7 +43,7 @@ export const Navbar: React.FC = () => {
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-bold text-slate-900 tracking-tight text-base sm:text-lg">
-                  AdaptifPHP
+                  AdaptivePHP
                 </span>
                 <span className="text-[11px] font-medium text-slate-500 hidden md:inline-block border-l border-slate-200 pl-2">
                   Portal Ujian &amp; Pembelajaran PHP
@@ -65,7 +65,7 @@ export const Navbar: React.FC = () => {
                   }`}
                 >
                   <FileQuestion className="w-3.5 h-3.5 text-indigo-600" />
-                  Assessment Awal (50 Soal)
+                  Assessment Awal (30 Soal)
                 </button>
               ) : (
                 <>
@@ -73,7 +73,7 @@ export const Navbar: React.FC = () => {
                     onClick={() => navigateTo('dashboard')}
                     className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
                       currentPage === 'dashboard'
-                        ? 'bg-slate-900 text-white'
+                        ? 'bg-indigo-600 text-white'
                         : 'text-slate-700 hover:bg-slate-100'
                     }`}
                   >
@@ -85,7 +85,7 @@ export const Navbar: React.FC = () => {
                     onClick={() => navigateTo('recommendations')}
                     className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
                       currentPage === 'recommendations' || currentPage === 'learning_detail'
-                        ? 'bg-slate-900 text-white'
+                        ? 'bg-indigo-600 text-white'
                         : 'text-slate-700 hover:bg-slate-100'
                     }`}
                   >
@@ -97,19 +97,19 @@ export const Navbar: React.FC = () => {
                     onClick={() => navigateTo('retest')}
                     className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
                       currentPage === 'retest' || currentPage === 'retest_result'
-                        ? 'bg-slate-900 text-white'
+                        ? 'bg-indigo-600 text-white'
                         : 'text-slate-700 hover:bg-slate-100'
                     }`}
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
-                    Retest (50 Soal)
+                    Retest (Maks. 30 Soal)
                   </button>
 
                   <button
                     onClick={() => navigateTo('progress')}
                     className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
                       currentPage === 'progress'
-                        ? 'bg-slate-900 text-white'
+                        ? 'bg-indigo-600 text-white'
                         : 'text-slate-700 hover:bg-slate-100'
                     }`}
                   >
@@ -121,7 +121,7 @@ export const Navbar: React.FC = () => {
                     onClick={() => navigateTo('history')}
                     className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
                       currentPage === 'history'
-                        ? 'bg-slate-900 text-white'
+                        ? 'bg-indigo-600 text-white'
                         : 'text-slate-700 hover:bg-slate-100'
                     }`}
                   >
@@ -147,7 +147,7 @@ export const Navbar: React.FC = () => {
                   onClick={() => navigateTo('register')}
                   className="text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-1.5 rounded-md shadow-sm transition-colors cursor-pointer"
                 >
-                  Mulai Assessment
+                  Daftar
                 </button>
               </div>
             ) : (
@@ -176,7 +176,7 @@ export const Navbar: React.FC = () => {
                   <div className="w-7 h-7 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs">
                     {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                   </div>
-                  <span className="hidden md:inline font-medium max-w-[120px] truncate">
+                  <span className="hidden md:inline font-medium max-w-[180px] break-words">
                     {user?.name}
                   </span>
                 </button>
@@ -203,14 +203,14 @@ export const Navbar: React.FC = () => {
                   currentPage === 'assessment' ? 'bg-indigo-600 text-white' : 'text-slate-700'
                 }`}
               >
-                Assessment Awal (50 Soal)
+                Assessment Awal (30 Soal)
               </button>
             ) : (
               <>
                 <button
                   onClick={() => navigateTo('dashboard')}
                   className={`text-xs font-medium px-2.5 py-1 rounded whitespace-nowrap ${
-                    currentPage === 'dashboard' ? 'bg-slate-900 text-white' : 'text-slate-700'
+                    currentPage === 'dashboard' ? 'bg-indigo-600 text-white' : 'text-slate-700'
                   }`}
                 >
                   Dashboard
@@ -218,7 +218,7 @@ export const Navbar: React.FC = () => {
                 <button
                   onClick={() => navigateTo('recommendations')}
                   className={`text-xs font-medium px-2.5 py-1 rounded whitespace-nowrap ${
-                    currentPage === 'recommendations' ? 'bg-slate-900 text-white' : 'text-slate-700'
+                    currentPage === 'recommendations' ? 'bg-indigo-600 text-white' : 'text-slate-700'
                   }`}
                 >
                   Rekomendasi
@@ -226,7 +226,7 @@ export const Navbar: React.FC = () => {
                 <button
                   onClick={() => navigateTo('retest')}
                   className={`text-xs font-medium px-2.5 py-1 rounded whitespace-nowrap ${
-                    currentPage === 'retest' ? 'bg-slate-900 text-white' : 'text-slate-700'
+                    currentPage === 'retest' ? 'bg-indigo-600 text-white' : 'text-slate-700'
                   }`}
                 >
                   Retest
@@ -234,7 +234,7 @@ export const Navbar: React.FC = () => {
                 <button
                   onClick={() => navigateTo('progress')}
                   className={`text-xs font-medium px-2.5 py-1 rounded whitespace-nowrap ${
-                    currentPage === 'progress' ? 'bg-slate-900 text-white' : 'text-slate-700'
+                    currentPage === 'progress' ? 'bg-indigo-600 text-white' : 'text-slate-700'
                   }`}
                 >
                   Progress
@@ -242,7 +242,7 @@ export const Navbar: React.FC = () => {
                 <button
                   onClick={() => navigateTo('history')}
                   className={`text-xs font-medium px-2.5 py-1 rounded whitespace-nowrap ${
-                    currentPage === 'history' ? 'bg-slate-900 text-white' : 'text-slate-700'
+                    currentPage === 'history' ? 'bg-indigo-600 text-white' : 'text-slate-700'
                   }`}
                 >
                   Riwayat

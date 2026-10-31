@@ -1,0 +1,153 @@
+﻿No,Level,Topik,Jenis Soal,Pertanyaan,Potongan Kode,Pilihan A,Pilihan B,Pilihan C,Pilihan D,Kunci Jawaban,Pembahasan,Bobot
+1,Intermediate,Array,Coding,Apa output kode berikut?,"$data = [""a"" => 2, ""b"" => 5];
+echo $data[""a""] + $data[""b""];",5,25,7,2,C,Nilai pada key a dan b dijumlahkan.,2
+2,Intermediate,OOP,Konsep,Apa yang dimaksud enkapsulasi dalam OOP?,,Menyalin seluruh database,Membatasi akses langsung ke detail internal objek,Mengubah class menjadi array,Mengulang kode tanpa batas,B,Enkapsulasi mengatur akses terhadap data dan perilaku objek.,2
+3,Intermediate,Array Filter,Coding,Apa isi hasil setelah kode dijalankan?,"$angka = [1, 2, 3, 4, 5];
+$hasil = array_filter($angka, fn($n) => $n % 2 === 0);
+echo implode("","", $hasil);","1,3,5","2,4",24,"2,3,4",B,array_filter mempertahankan elemen genap; implode menggabungkannya dengan koma.,2
+4,Intermediate,OOP,Konsep,Kata kunci untuk mewarisi class adalah ...,,inherits_from,extends,using,implements,B,Class turunan menggunakan extends.,2
+5,Intermediate,Array Map,Coding,Apa output kode berikut?,"$angka = [1, 2, 3];
+$hasil = array_map(fn($n) => $n * 2, $angka);
+echo implode(""-"", $hasil);",1-2-3,246,2-3-4,2-4-6,D,array_map menerapkan fungsi ke setiap elemen.,2
+6,Intermediate,OOP,Konsep,Kata kunci untuk memenuhi kontrak interface adalah ...,,contract,implements,extends_only,trait,B,Class menggunakan implements untuk mengimplementasikan interface.,2
+7,Intermediate,Sorting,Coding,Apa output kode berikut?,"$angka = [3, 1, 2];
+sort($angka);
+echo implode("""", $angka);",132,312,123,321,C,sort mengurutkan array numerik menaik.,2
+8,Intermediate,OOP,Konsep,Method static dipanggil melalui ...,,Tanda #,Nama class dan operator ::,Operator -> pada objek saja,Fungsi echo,B,Method static terkait class dan dipanggil dengan ::.,2
+9,Intermediate,String Replace,Coding,Apa output kode berikut?,"echo str_replace(""PHP"", ""Laravel"", ""Belajar PHP"");",PHP Laravel,Laravel Belajar,Belajar PHP,Belajar Laravel,D,str_replace mengganti kemunculan PHP dengan Laravel.,2
+10,Intermediate,Error Handling,Konsep,Blok yang dijalankan saat exception cocok ditangkap adalah ...,,finally saja,switch,catch,echo,C,catch menangani exception yang dilempar dari blok try.,2
+11,Intermediate,Explode,Coding,Apa output kode berikut?,"$kata = explode("","", ""merah,hijau,biru"");
+echo $kata[2];",2,merah,biru,hijau,C,explode memecah string berdasarkan koma dan indeks 2 adalah biru.,2
+12,Intermediate,JSON,Konsep,Fungsi untuk mengubah array/objek PHP menjadi JSON adalah ...,,json_encode(),array_json_read(),serialize_html(),json_decode(),A,json_encode mengubah nilai PHP menjadi string JSON.,2
+13,Intermediate,Filter Input,Coding,Apa output kode berikut?,"$nilai = [70, 80, 90];
+$hasil = array_filter($nilai, fn($n) => $n >= 80);
+echo count($hasil);",1,2,3,80,B,"Dua nilai, 80 dan 90, memenuhi kondisi.",2
+14,Intermediate,Array,Konsep,Fungsi untuk mengubah array menjadi string dengan pemisah adalah ...,,explode(),array_map(),sort(),implode(),D,implode menggabungkan elemen array menjadi string.,2
+15,Intermediate,Function Scope,Coding,Apa output kode berikut?,"$x = 10;
+function hitung($n) { return $n + 2; }
+echo hitung($x);",2,Error karena $x global,10,12,D,Nilai $x dikirim sebagai argumen ke parameter $n.,2
+16,Intermediate,Array,Konsep,Fungsi yang memecah string menjadi array berdasarkan delimiter adalah ...,,implode(),str_split_only(),explode(),array_filter(),C,explode memecah string menurut delimiter.,2
+17,Intermediate,Variadic,Coding,Apa output kode berikut?,"function jumlah(...$angka) { return array_sum($angka); }
+echo jumlah(2, 3, 4);",Error,9,234,5,B,"Parameter variadic mengumpulkan argumen menjadi array, lalu array_sum menjumlahkannya.",2
+18,Intermediate,Array,Konsep,array_map() digunakan untuk ...,,Menghapus database,Membuat session,Menerapkan callback ke setiap elemen array,Mengurutkan file,C,array_map menghasilkan array berdasarkan hasil callback.,2
+19,Intermediate,Try Catch,Coding,Apa output kode berikut?,"try { throw new Exception(""Gagal""); }
+catch (Exception $e) { echo $e->getMessage(); }",true,Tidak ada output,Exception,Gagal,D,Exception ditangkap dan pesannya ditampilkan.,2
+20,Intermediate,Array,Konsep,array_filter() digunakan untuk ...,,Menghitung byte,Membalik urutan file,Menyaring elemen berdasarkan callback,Mengubah semua elemen menjadi string,C,array_filter mempertahankan elemen yang memenuhi callback.,2
+21,Intermediate,JSON,Coding,Apa output kode berikut?,"$json = '{""nama"":""Dina"",""umur"":20}';
+$data = json_decode($json, true);
+echo $data[""nama""];",20,Dina,null,nama,B,Argumen true membuat hasil json_decode berupa array asosiatif.,2
+22,Intermediate,Database,Konsep,Apa tujuan PDO::prepare()?,,Menyiapkan statement dengan parameter,Menutup session,Membuat tampilan HTML,Menghapus semua tabel,A,prepare menyiapkan pernyataan SQL untuk dieksekusi dengan parameter.,2
+23,Intermediate,Null Coalescing Assignment,Coding,Apa output kode berikut?,"$nama = null;
+$nama ??= ""Tamu"";
+echo $nama;",null,Tamu,0,Error,B,??= mengisi variabel jika nilainya null atau belum ditentukan.,2
+24,Intermediate,Database,Konsep,Apa manfaat transaksi database?,,Membuat password terlihat,Menonaktifkan validasi,Mengelompokkan operasi agar dapat commit atau rollback,Mengganti semua tipe data,C,Transaksi membantu menjaga konsistensi beberapa operasi terkait.,2
+25,Intermediate,DateTime,Coding,Apa output kode berikut?,"$tanggal = new DateTime(""2025-01-10"");
+echo $tanggal->format(""d/m/Y"");",01/10/2025,2025-01-10,10/01/2025,10-01-25,C,format d/m/Y menghasilkan hari/bulan/tahun.,2
+26,Intermediate,Keamanan,Konsep,SQL injection terjadi ketika ...,,Loop berjalan dua kali,Array kosong,Input tak tepercaya memengaruhi struktur query SQL,CSS gagal dimuat,C,Query yang dibangun tidak aman dari input dapat dimanipulasi.,2
+27,Intermediate,Class,Coding,Apa output kode berikut?,"class Produk { public $nama = ""Buku""; }
+$p = new Produk();
+echo $p->nama;",Error,Buku,Produk,$nama,B,Properti publik diakses menggunakan operator ->.,2
+28,Intermediate,Keamanan,Konsep,XSS adalah serangan yang melibatkan ...,,Perulangan tak terbatas saja,Kesalahan tipe integer,Skrip berbahaya yang dijalankan di browser pengguna,Kegagalan koneksi database saja,C,Cross-site scripting menyisipkan skrip ke konten yang dipercaya browser.,2
+29,Intermediate,Constructor,Coding,Apa output kode berikut?,"class User { public function __construct(public string $nama) {} }
+$u = new User(""Rani"");
+echo $u->nama;",Rani,nama,User,Error pada PHP 8+,A,Constructor property promotion menginisialisasi properti nama.,2
+30,Intermediate,Keamanan,Konsep,Praktik yang benar untuk kata sandi pengguna adalah ...,,Simpan di URL,Gunakan base64 sebagai enkripsi,Simpan teks biasa,Hash dengan password_hash() dan verifikasi dengan password_verify(),D,Hash kata sandi dirancang untuk penyimpanan yang lebih aman.,2
+31,Intermediate,Inheritance,Coding,Apa output kode berikut?,"class A { public function pesan() { return ""Halo""; } }
+class B extends A {}
+echo (new B())->pesan();",Halo,B,null,Error karena tidak ada method,A,Class B mewarisi method publik dari class A.,2
+32,Intermediate,Session,Konsep,Data session umumnya disimpan dan diakses melalui ...,,$_FILES saja,$_GET saja,$_SERVER['CSS'],$_SESSION,D,$_SESSION berisi data session pengguna.,2
+33,Intermediate,Static,Coding,Apa output kode berikut?,"class Konstanta { public static $angka = 8; }
+echo Konstanta::$angka;",8,Error,Konstanta,$angka,A,Properti static diakses menggunakan operator ::.,2
+34,Intermediate,Cookie,Konsep,Cookie berbeda dari session karena cookie ...,,Tidak pernah punya masa berlaku,Selalu disimpan hanya di memori server,Tidak dapat dikirim melalui HTTP,Disimpan di sisi klien oleh browser,D,Cookie disimpan di browser dan dikirim sesuai aturan domain/path.,2
+35,Intermediate,Interface,Coding,Apa fungsi utama interface?,,Menetapkan kontrak method yang harus diimplementasikan,Menyimpan data session otomatis,Mencetak HTML saja,Mengganti database,A,Class yang mengimplementasikan interface harus memenuhi kontrak method-nya.,2
+36,Intermediate,File,Konsep,"Mode fopen('file.txt', 'a') berarti ...",,Membaca saja,Membuka untuk menambahkan data di akhir file,Menimpa dari awal,Menghapus file otomatis,B,Mode a membuka file untuk append.,2
+37,Intermediate,Session,Coding,Apa yang perlu dilakukan sebelum menggunakan session pada halaman PHP biasa?,,Memanggil session_end(),Memanggil session_start() sebelum output,Menghapus semua cookie,Mengaktifkan foreach,B,session_start() memulai atau melanjutkan session.,2
+38,Intermediate,Composer,Konsep,Composer terutama digunakan untuk ...,,Menggantikan server web,Mengompilasi CSS saja,Mengelola dependensi PHP,Mengelola perangkat keras,C,Composer mengelola paket dan autoload PHP.,2
+39,Intermediate,Prepared Statement,Coding,Mengapa prepared statement penting saat menjalankan query?,,Mempercepat CSS,Menghapus validasi,Mengubah PHP menjadi JavaScript,Membantu mencegah SQL injection,D,Parameter query dipisahkan dari struktur SQL.,2
+40,Intermediate,Autoload,Konsep,Tujuan autoloading class adalah ...,,Mengubah PHP menjadi SQL,Memuat file class saat dibutuhkan tanpa require manual berulang,Menjalankan semua file dalam folder,Menghapus namespace,B,Autoload memuat class sesuai aturan autoload.,2
+41,Intermediate,Password,Coding,Fungsi yang disarankan untuk membuat hash kata sandi adalah ...,,password_hash(),md5() untuk semua kebutuhan,base64_encode(),strtoupper(),A,password_hash menggunakan algoritma hashing kata sandi yang sesuai.,2
+42,Intermediate,Type Declaration,Konsep,Deklarasi return type `: int` menunjukkan bahwa ...,,Nilai selalu string,Parameter harus array,Fungsi tidak boleh return,Fungsi diharapkan mengembalikan integer,D,Return type menyatakan tipe nilai hasil fungsi.,2
+43,Intermediate,File Read,Coding,Fungsi yang membaca seluruh isi file ke string adalah ...,,file_get_contents(),file_put_contents(),read_html(),fopen_only(),A,file_get_contents membaca isi file dan mengembalikannya sebagai string.,2
+44,Intermediate,Exception,Konsep,Kata kunci untuk melempar exception adalah ...,,throw,break,catch,raise_error_php,A,throw melempar objek exception.,2
+45,Intermediate,Validation,Coding,"Fungsi filter_var($email, FILTER_VALIDATE_EMAIL) digunakan untuk ...",,Mengenkripsi email,Menghapus email,Memvalidasi format alamat email,Mengirim email,C,Filter tersebut memeriksa apakah nilai memiliki format email yang valid.,2
+46,Intermediate,DateTime,Konsep,Kelebihan DateTime dibanding manipulasi string tanggal manual adalah ...,,Tidak mendukung format,Menyediakan operasi tanggal/waktu yang lebih terstruktur,Hanya dapat menyimpan tahun,Otomatis membuat database,B,DateTime menyediakan API untuk format dan perhitungan tanggal.,2
+47,Intermediate,Namespace,Coding,Tujuan namespace di PHP adalah ...,,Membuka port server,Mengelompokkan nama dan menghindari benturan nama,Membuat array otomatis,Mengganti tipe data,B,Namespace mengorganisasi kode dan mengurangi konflik nama.,2
+48,Intermediate,HTTP,Konsep,Kode status HTTP 404 umumnya berarti ...,,Akses selalu diizinkan,Resource tidak ditemukan,Permintaan sukses,Kesalahan server internal,B,404 menunjukkan resource yang diminta tidak ditemukan.,2
+49,Intermediate,Trait,Coding,Trait di PHP terutama digunakan untuk ...,,Menggunakan ulang sekumpulan method pada beberapa class,Membuat database,Mendeklarasikan konstanta global saja,Menghentikan exception,A,Trait membantu penggunaan ulang method tanpa pewarisan class tambahan.,2
+50,Intermediate,HTTP,Konsep,Kode status HTTP 500 umumnya menunjukkan ...,,Kesalahan internal server,Redirect permanen,Resource berhasil dibuat,Permintaan valid tanpa isi,A,500 adalah status kesalahan server internal.,2
+51,Intermediate,Array,Coding,Apa output kode berikut?,"$data = [""a"" => 2, ""b"" => 5];
+echo $data[""a""] + $data[""b""];",7,5,2,25,A,Nilai pada key a dan b dijumlahkan.,2
+52,Intermediate,OOP,Konsep,Apa yang dimaksud enkapsulasi dalam OOP?,,Mengubah class menjadi array,Membatasi akses langsung ke detail internal objek,Mengulang kode tanpa batas,Menyalin seluruh database,B,Enkapsulasi mengatur akses terhadap data dan perilaku objek.,2
+53,Intermediate,Array Filter,Coding,Apa isi hasil setelah kode dijalankan?,"$angka = [1, 2, 3, 4, 5];
+$hasil = array_filter($angka, fn($n) => $n % 2 === 0);
+echo implode("","", $hasil);","2,4","1,3,5",24,"2,3,4",A,array_filter mempertahankan elemen genap; implode menggabungkannya dengan koma.,2
+54,Intermediate,OOP,Konsep,Kata kunci untuk mewarisi class adalah ...,,inherits_from,implements,using,extends,D,Class turunan menggunakan extends.,2
+55,Intermediate,Array Map,Coding,Apa output kode berikut?,"$angka = [1, 2, 3];
+$hasil = array_map(fn($n) => $n * 2, $angka);
+echo implode(""-"", $hasil);",246,2-3-4,2-4-6,1-2-3,C,array_map menerapkan fungsi ke setiap elemen.,2
+56,Intermediate,OOP,Konsep,Kata kunci untuk memenuhi kontrak interface adalah ...,,extends_only,trait,contract,implements,D,Class menggunakan implements untuk mengimplementasikan interface.,2
+57,Intermediate,Sorting,Coding,Apa output kode berikut?,"$angka = [3, 1, 2];
+sort($angka);
+echo implode("""", $angka);",312,123,321,132,B,sort mengurutkan array numerik menaik.,2
+58,Intermediate,OOP,Konsep,Method static dipanggil melalui ...,,Tanda #,Nama class dan operator ::,Operator -> pada objek saja,Fungsi echo,B,Method static terkait class dan dipanggil dengan ::.,2
+59,Intermediate,String Replace,Coding,Apa output kode berikut?,"echo str_replace(""PHP"", ""Laravel"", ""Belajar PHP"");",Belajar Laravel,Belajar PHP,Laravel Belajar,PHP Laravel,A,str_replace mengganti kemunculan PHP dengan Laravel.,2
+60,Intermediate,Error Handling,Konsep,Blok yang dijalankan saat exception cocok ditangkap adalah ...,,switch,echo,catch,finally saja,C,catch menangani exception yang dilempar dari blok try.,2
+61,Intermediate,Explode,Coding,Apa output kode berikut?,"$kata = explode("","", ""merah,hijau,biru"");
+echo $kata[2];",hijau,2,merah,biru,D,explode memecah string berdasarkan koma dan indeks 2 adalah biru.,2
+62,Intermediate,JSON,Konsep,Fungsi untuk mengubah array/objek PHP menjadi JSON adalah ...,,json_encode(),array_json_read(),serialize_html(),json_decode(),A,json_encode mengubah nilai PHP menjadi string JSON.,2
+63,Intermediate,Filter Input,Coding,Apa output kode berikut?,"$nilai = [70, 80, 90];
+$hasil = array_filter($nilai, fn($n) => $n >= 80);
+echo count($hasil);",1,80,3,2,D,"Dua nilai, 80 dan 90, memenuhi kondisi.",2
+64,Intermediate,Array,Konsep,Fungsi untuk mengubah array menjadi string dengan pemisah adalah ...,,array_map(),sort(),explode(),implode(),D,implode menggabungkan elemen array menjadi string.,2
+65,Intermediate,Function Scope,Coding,Apa output kode berikut?,"$x = 10;
+function hitung($n) { return $n + 2; }
+echo hitung($x);",12,10,2,Error karena $x global,A,Nilai $x dikirim sebagai argumen ke parameter $n.,2
+66,Intermediate,Array,Konsep,Fungsi yang memecah string menjadi array berdasarkan delimiter adalah ...,,explode(),implode(),str_split_only(),array_filter(),A,explode memecah string menurut delimiter.,2
+67,Intermediate,Variadic,Coding,Apa output kode berikut?,"function jumlah(...$angka) { return array_sum($angka); }
+echo jumlah(2, 3, 4);",5,234,9,Error,C,"Parameter variadic mengumpulkan argumen menjadi array, lalu array_sum menjumlahkannya.",2
+68,Intermediate,Array,Konsep,array_map() digunakan untuk ...,,Mengurutkan file,Menerapkan callback ke setiap elemen array,Menghapus database,Membuat session,B,array_map menghasilkan array berdasarkan hasil callback.,2
+69,Intermediate,Try Catch,Coding,Apa output kode berikut?,"try { throw new Exception(""Gagal""); }
+catch (Exception $e) { echo $e->getMessage(); }",Gagal,Exception,true,Tidak ada output,A,Exception ditangkap dan pesannya ditampilkan.,2
+70,Intermediate,Array,Konsep,array_filter() digunakan untuk ...,,Menyaring elemen berdasarkan callback,Membalik urutan file,Menghitung byte,Mengubah semua elemen menjadi string,A,array_filter mempertahankan elemen yang memenuhi callback.,2
+71,Intermediate,JSON,Coding,Apa output kode berikut?,"$json = '{""nama"":""Dina"",""umur"":20}';
+$data = json_decode($json, true);
+echo $data[""nama""];",null,nama,20,Dina,D,Argumen true membuat hasil json_decode berupa array asosiatif.,2
+72,Intermediate,Database,Konsep,Apa tujuan PDO::prepare()?,,Menyiapkan statement dengan parameter,Membuat tampilan HTML,Menutup session,Menghapus semua tabel,A,prepare menyiapkan pernyataan SQL untuk dieksekusi dengan parameter.,2
+73,Intermediate,Null Coalescing Assignment,Coding,Apa output kode berikut?,"$nama = null;
+$nama ??= ""Tamu"";
+echo $nama;",null,Tamu,Error,0,B,??= mengisi variabel jika nilainya null atau belum ditentukan.,2
+74,Intermediate,Database,Konsep,Apa manfaat transaksi database?,,Menonaktifkan validasi,Mengganti semua tipe data,Mengelompokkan operasi agar dapat commit atau rollback,Membuat password terlihat,C,Transaksi membantu menjaga konsistensi beberapa operasi terkait.,2
+75,Intermediate,DateTime,Coding,Apa output kode berikut?,"$tanggal = new DateTime(""2025-01-10"");
+echo $tanggal->format(""d/m/Y"");",2025-01-10,10/01/2025,01/10/2025,10-01-25,B,format d/m/Y menghasilkan hari/bulan/tahun.,2
+76,Intermediate,Keamanan,Konsep,SQL injection terjadi ketika ...,,Loop berjalan dua kali,Array kosong,Input tak tepercaya memengaruhi struktur query SQL,CSS gagal dimuat,C,Query yang dibangun tidak aman dari input dapat dimanipulasi.,2
+77,Intermediate,Class,Coding,Apa output kode berikut?,"class Produk { public $nama = ""Buku""; }
+$p = new Produk();
+echo $p->nama;",Buku,$nama,Produk,Error,A,Properti publik diakses menggunakan operator ->.,2
+78,Intermediate,Keamanan,Konsep,XSS adalah serangan yang melibatkan ...,,Kegagalan koneksi database saja,Kesalahan tipe integer,Skrip berbahaya yang dijalankan di browser pengguna,Perulangan tak terbatas saja,C,Cross-site scripting menyisipkan skrip ke konten yang dipercaya browser.,2
+79,Intermediate,Constructor,Coding,Apa output kode berikut?,"class User { public function __construct(public string $nama) {} }
+$u = new User(""Rani"");
+echo $u->nama;",nama,Rani,User,Error pada PHP 8+,B,Constructor property promotion menginisialisasi properti nama.,2
+80,Intermediate,Keamanan,Konsep,Praktik yang benar untuk kata sandi pengguna adalah ...,,Gunakan base64 sebagai enkripsi,Hash dengan password_hash() dan verifikasi dengan password_verify(),Simpan teks biasa,Simpan di URL,B,Hash kata sandi dirancang untuk penyimpanan yang lebih aman.,2
+81,Intermediate,Inheritance,Coding,Apa output kode berikut?,"class A { public function pesan() { return ""Halo""; } }
+class B extends A {}
+echo (new B())->pesan();",Halo,Error karena tidak ada method,B,null,A,Class B mewarisi method publik dari class A.,2
+82,Intermediate,Session,Konsep,Data session umumnya disimpan dan diakses melalui ...,,$_GET saja,$_SESSION,$_FILES saja,$_SERVER['CSS'],B,$_SESSION berisi data session pengguna.,2
+83,Intermediate,Static,Coding,Apa output kode berikut?,"class Konstanta { public static $angka = 8; }
+echo Konstanta::$angka;",Konstanta,$angka,8,Error,C,Properti static diakses menggunakan operator ::.,2
+84,Intermediate,Cookie,Konsep,Cookie berbeda dari session karena cookie ...,,Tidak pernah punya masa berlaku,Disimpan di sisi klien oleh browser,Selalu disimpan hanya di memori server,Tidak dapat dikirim melalui HTTP,B,Cookie disimpan di browser dan dikirim sesuai aturan domain/path.,2
+85,Intermediate,Interface,Coding,Apa fungsi utama interface?,,Menetapkan kontrak method yang harus diimplementasikan,Mengganti database,Menyimpan data session otomatis,Mencetak HTML saja,A,Class yang mengimplementasikan interface harus memenuhi kontrak method-nya.,2
+86,Intermediate,File,Konsep,"Mode fopen('file.txt', 'a') berarti ...",,Menimpa dari awal,Membuka untuk menambahkan data di akhir file,Menghapus file otomatis,Membaca saja,B,Mode a membuka file untuk append.,2
+87,Intermediate,Session,Coding,Apa yang perlu dilakukan sebelum menggunakan session pada halaman PHP biasa?,,Menghapus semua cookie,Mengaktifkan foreach,Memanggil session_end(),Memanggil session_start() sebelum output,D,session_start() memulai atau melanjutkan session.,2
+88,Intermediate,Composer,Konsep,Composer terutama digunakan untuk ...,,Menggantikan server web,Mengompilasi CSS saja,Mengelola perangkat keras,Mengelola dependensi PHP,D,Composer mengelola paket dan autoload PHP.,2
+89,Intermediate,Prepared Statement,Coding,Mengapa prepared statement penting saat menjalankan query?,,Mengubah PHP menjadi JavaScript,Membantu mencegah SQL injection,Menghapus validasi,Mempercepat CSS,B,Parameter query dipisahkan dari struktur SQL.,2
+90,Intermediate,Autoload,Konsep,Tujuan autoloading class adalah ...,,Mengubah PHP menjadi SQL,Menghapus namespace,Menjalankan semua file dalam folder,Memuat file class saat dibutuhkan tanpa require manual berulang,D,Autoload memuat class sesuai aturan autoload.,2
+91,Intermediate,Password,Coding,Fungsi yang disarankan untuk membuat hash kata sandi adalah ...,,base64_encode(),md5() untuk semua kebutuhan,password_hash(),strtoupper(),C,password_hash menggunakan algoritma hashing kata sandi yang sesuai.,2
+92,Intermediate,Type Declaration,Konsep,Deklarasi return type `: int` menunjukkan bahwa ...,,Fungsi diharapkan mengembalikan integer,Nilai selalu string,Parameter harus array,Fungsi tidak boleh return,A,Return type menyatakan tipe nilai hasil fungsi.,2
+93,Intermediate,File Read,Coding,Fungsi yang membaca seluruh isi file ke string adalah ...,,file_get_contents(),read_html(),file_put_contents(),fopen_only(),A,file_get_contents membaca isi file dan mengembalikannya sebagai string.,2
+94,Intermediate,Exception,Konsep,Kata kunci untuk melempar exception adalah ...,,raise_error_php,break,catch,throw,D,throw melempar objek exception.,2
+95,Intermediate,Validation,Coding,"Fungsi filter_var($email, FILTER_VALIDATE_EMAIL) digunakan untuk ...",,Mengenkripsi email,Menghapus email,Mengirim email,Memvalidasi format alamat email,D,Filter tersebut memeriksa apakah nilai memiliki format email yang valid.,2
+96,Intermediate,DateTime,Konsep,Kelebihan DateTime dibanding manipulasi string tanggal manual adalah ...,,Tidak mendukung format,Otomatis membuat database,Hanya dapat menyimpan tahun,Menyediakan operasi tanggal/waktu yang lebih terstruktur,D,DateTime menyediakan API untuk format dan perhitungan tanggal.,2
+97,Intermediate,Namespace,Coding,Tujuan namespace di PHP adalah ...,,Membuat array otomatis,Mengganti tipe data,Membuka port server,Mengelompokkan nama dan menghindari benturan nama,D,Namespace mengorganisasi kode dan mengurangi konflik nama.,2
+98,Intermediate,HTTP,Konsep,Kode status HTTP 404 umumnya berarti ...,,Permintaan sukses,Akses selalu diizinkan,Kesalahan server internal,Resource tidak ditemukan,D,404 menunjukkan resource yang diminta tidak ditemukan.,2
+99,Intermediate,Trait,Coding,Trait di PHP terutama digunakan untuk ...,,Mendeklarasikan konstanta global saja,Menghentikan exception,Menggunakan ulang sekumpulan method pada beberapa class,Membuat database,C,Trait membantu penggunaan ulang method tanpa pewarisan class tambahan.,2
+100,Intermediate,HTTP,Konsep,Kode status HTTP 500 umumnya menunjukkan ...,,Resource berhasil dibuat,Permintaan valid tanpa isi,Redirect permanen,Kesalahan internal server,D,500 adalah status kesalahan server internal.,2

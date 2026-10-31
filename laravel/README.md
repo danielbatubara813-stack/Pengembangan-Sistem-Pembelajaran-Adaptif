@@ -1,62 +1,56 @@
-# Panduan Integrasi Sistem Pembelajaran Adaptif PHP ke Proyek Laravel
+# Laravel API AdaptivePHP
 
-Folder `/laravel` ini berisi seluruh struktur kode backend dan database yang telah disiapkan secara rapi dan standar untuk Laravel (Laravel 10, 11, atau 12). Anda dapat langsung menyalin (copy-paste) file-file ini ke folder proyek Laravel Anda.
-
----
-
-## 1. Pemetaan File ke Proyek Laravel Anda
-
-Salin file dari folder ini ke lokasi proyek Laravel Anda:
-
-| File Sumber di Sini | Salin ke Folder Laravel Anda |
-|---------------------|-------------------------------|
-| `laravel/app/Models/*` | `app/Models/` |
-| `laravel/app/Http/Controllers/*` | `app/Http/Controllers/` |
-| `laravel/app/Services/*` | `app/Services/` |
-| `laravel/database/migrations/*` | `database/migrations/` |
-| `laravel/database/seeders/*` | `database/seeders/` |
-| `laravel/routes/web.php` | Gabungkan ke `routes/web.php` |
+Folder ini adalah backend Laravel aktif untuk aplikasi React di root proyek. React menggunakan API `/api/*` dan session cookie Laravel Sanctum.
 
 ---
 
-## 2. Langkah Instalasi & Database Migration
+## Menjalankan backend
 
-Setelah menyalin file ke proyek Laravel Anda, buka terminal dan jalankan:
+1. Jalankan `composer install` dari folder ini.
+2. Pertahankan `.env` yang sudah ada. Jika belum ada, salin `.env.example` ke `.env`, lalu atur MySQL ke `pengembangan_pembelajaran_adaptif`.
+3. Isi kunci Gemini atau OpenRouter di `.env` Laravel saja.
+4. Periksa `php artisan migrate:status`. Jalankan `php artisan migrate` untuk migration yang tertunda setelah memastikan target koneksi benar.
+5. Jalankan `php artisan serve --host=127.0.0.1 --port=8000`.
 
-```bash
-# 1. Jalankan migrasi tabel database (8 tabel adaptif)
-php artisan migrate
-
-# 2. Isi bank 50 butir soal assessment & retest
-php artisan db:seed --class=QuestionSeeder
-```
+Bank soal 300 butir sudah tersedia, masing-masing 100 untuk Beginner, Intermediate, dan Advanced. Jangan jalankan seeder, `migrate:fresh`, `db:wipe`, atau perintah reset database.
 
 ---
 
-## 3. Konfigurasi Lingkungan (.env)
+## Konfigurasi lingkungan (.env)
 
-Tambahkan konfigurasi opsional untuk integrasi Gemini AI di file `.env` Laravel Anda:
+Konfigurasi provider hanya berada di `.env` Laravel. Gemini diperlukan untuk pencarian web grounded; OpenRouter opsional untuk penilaian kecocokan sumber dan analisis teks. Kunci tidak dipakai di React:
 
 ```env
-# Opsional: Jika ingin analisis naratif langsung dari Gemini API
-GEMINI_API_KEY="AIzaSy..."
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-3.8-flash
+GEMINI_SEARCH_MODEL=gemini-3.8-flash
+OPENROUTER_API_KEY=
+OPENROUTER_CHAT_MODEL=openai/gpt-4o-mini
+LEARNING_SEARCH_CACHE_STORE=file
+LEARNING_SEARCH_CACHE_HOURS=24
+LEARNING_SEARCH_VALIDATION_HOURS=24
 ```
 
-*(Catatan: Jika API key tidak diisi, sistem otomatis menggunakan mesin diagnostik adaptif lokal dengan aturan skoring dan pemetaan skill gap yang 100% presisi).*
+Gemini Search mengembalikan citation URL; Laravel mengambil dan memeriksa halaman, metadata, kecocokan isi, lalu status pemutaran video sebelum menyimpan rekomendasi. Hasil pencarian dan validasi di-cache 24 jam secara default. Tautan yang gagal validasi tidak dikirim ke React; saat tidak ada hasil, halaman menampilkan empty state.
+
+Menurut dokumentasi Google yang diperiksa 30 Oktober 2026, Gemini 3+ mencakup 5.000 search requests gratis per bulan, lalu $14 per 1.000 query; batas default tier berbayar yang didokumentasikan ialah 1.500 request per hari per project. Satu prompt kompetensi dapat memicu beberapa query Google, dan biaya token model dapat berlaku terpisah. Lihat [harga Grounding with Google Search](https://ai.google.dev/gemini-api/docs/google-search) dan [rate limits](https://ai.google.dev/gemini-api/docs/rate-limits). Tanpa `GEMINI_API_KEY`, analisis assessment tetap dapat memakai fallback lokal, tetapi sistem tidak mengarang atau menampilkan tautan rekomendasi.
 
 ---
 
 ## 4. Struktur Basis Data (MySQL)
 
-Sistem menggunakan 8 tabel relasional yang saling terhubung:
-1. `questions`: Menyimpan 50 soal assessment awal dan 50 soal retest beserta kunci dan penjelasannya.
+Backend memakai tabel relasional berikut serta `users`, `sessions`, dan `user_progress` untuk akun, sesi, dan snapshot progres:
+1. `questions`: Menyimpan bank soal CSV per level; assessment awal mengambil 10 soal acak dari tiap level (30 total).
 2. `assessments`: Rekaman nilai (0-100), level (Beginner/Intermediate/Advanced), dan analisis AI.
 3. `answers`: Jawaban yang dipilih pengguna per butir soal.
 4. `skill_gaps`: Topik-topik yang performanya di bawah ambang batas (&lt;70%) dengan prioritas perbaikan.
-5. `recommendations`: 6 tipe sumber belajar (Video, Artikel, Dokumentasi, Jurnal, Website, Latihan) terfilter khusus untuk skill gap.
-6. `user_recommendation_progress`: Status centang penyelesaian materi belajar oleh pengguna.
-7. `retests`: Hasil pengerjaan 50 soal retest beserta komparasi peningkatan skor (+/-).
-8. `retest_answers`: Rincian jawaban pada sesi retest.
+5. `learning_competencies`: Subkompetensi yang diturunkan dari butir soal, tujuan belajar, contoh kode, dan latihan.
+6. `assessment_competency_results`: Skor benar/salah per kompetensi dan tingkat kesulitan pada tes awal maupun retest.
+7. `recommendations`: Referensi hasil pencarian dengan metadata URL, domain, query, relevansi, dan status validasi/playback.
+8. `user_learning_recommendations`: Riwayat rekomendasi per akun dan percobaan assessment, termasuk status aktif, dikuasai, atau diganti setelah retest.
+9. `user_recommendation_progress`: Status centang penyelesaian materi belajar oleh pengguna.
+10. `retests`: Hasil pengerjaan maksimal 30 soal retest beserta komparasi peningkatan skor (+/-).
+11. `retest_answers`: Rincian jawaban pada sesi retest.
 
 ---
 

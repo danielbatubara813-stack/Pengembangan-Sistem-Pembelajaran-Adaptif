@@ -42,36 +42,36 @@ export const LaravelSpecModal: React.FC<Props> = ({ isOpen, onClose }) => {
       <div
         className="relative w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[90vh] flex flex-col"
         style={{
-          backgroundColor: '#111827', // Slate 900
-          border: '1px solid #1E293B' // Slate 800
+          backgroundColor: 'var(--color-surface)', // Slate 900
+          border: '1px solid var(--color-border)' // Slate 800
         }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div
           className="flex items-center justify-between px-6 py-4"
-          style={{ backgroundColor: '#0D1527', borderBottom: '1px solid #334155' }}
+          style={{ backgroundColor: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)' }}
         >
           <div className="flex items-center gap-3">
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white text-sm shadow-sm"
-              style={{ backgroundColor: '#3B82F6' }}
+              style={{ backgroundColor: 'var(--color-primary)' }}
             >
               <Server className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-sm sm:text-base font-bold tracking-tight" style={{ color: '#F8FAFC' }}>
+                <h3 className="text-sm sm:text-base font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
                   Arsitektur Backend: Laravel 11 &amp; MySQL + AI Engine
                 </h3>
                 <span
                   className="text-[10px] font-mono px-2 py-0.5 rounded font-bold"
-                  style={{ backgroundColor: '#1E293B', color: '#6366F1', border: '1px solid #334155' }}
+                  style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-primary)', border: '1px solid var(--color-border)' }}
                 >
                   PHP 8.3 &bull; REST API
                 </span>
               </div>
-              <p className="text-[11px]" style={{ color: '#94A3B8' }}>
+              <p className="text-[11px]" style={{ color: 'var(--color-text-secondary)' }}>
                 Spesifikasi integrasi Frontend (React + Tailwind) dengan Backend (Laravel 11)
               </p>
             </div>
@@ -79,8 +79,8 @@ export const LaravelSpecModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg transition-colors cursor-pointer hover:bg-slate-800"
-            style={{ color: '#94A3B8' }}
+            className="p-1.5 rounded-lg transition-colors cursor-pointer hover:bg-slate-100"
+            style={{ color: 'var(--color-text-secondary)' }}
           >
             <X className="w-5 h-5" />
           </button>
@@ -89,7 +89,7 @@ export const LaravelSpecModal: React.FC<Props> = ({ isOpen, onClose }) => {
         {/* Tab Navigation */}
         <div
           className="flex items-center gap-1 px-6 py-2.5 overflow-x-auto text-xs font-semibold no-scrollbar"
-          style={{ backgroundColor: '#0D1527', borderBottom: '1px solid #1E293B' }}
+          style={{ backgroundColor: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)' }}
         >
           {[
             { key: 'architecture', label: '1. Desain Arsitektur' },
@@ -104,8 +104,8 @@ export const LaravelSpecModal: React.FC<Props> = ({ isOpen, onClose }) => {
               onClick={() => setActiveTab(tab.key as any)}
               className="px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap cursor-pointer"
               style={{
-                backgroundColor: activeTab === tab.key ? '#3B82F6' : 'transparent',
-                color: activeTab === tab.key ? '#F8FAFC' : '#94A3B8'
+                backgroundColor: activeTab === tab.key ? 'var(--color-primary)' : 'transparent',
+                color: activeTab === tab.key ? 'var(--color-surface)' : 'var(--color-text-secondary)'
               }}
             >
               {tab.label}
@@ -114,21 +114,21 @@ export const LaravelSpecModal: React.FC<Props> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Tab Body */}
-        <div className="flex-1 overflow-y-auto p-6" style={{ color: '#F8FAFC' }}>
+        <div className="flex-1 overflow-y-auto p-6" style={{ color: 'var(--color-text-primary)' }}>
           {activeTab === 'architecture' && (
             <div className="space-y-6 text-xs sm:text-sm">
               <div
                 className="p-4 rounded-xl"
                 style={{
-                  backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                  border: '1px solid rgba(99, 102, 241, 0.3)'
+                  backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                  border: '1px solid rgba(79, 70, 229, 0.3)'
                 }}
               >
-                <div className="flex items-center gap-2 font-bold mb-1" style={{ color: '#6366F1' }}>
+                <div className="flex items-center gap-2 font-bold mb-1" style={{ color: 'var(--color-primary)' }}>
                   <Cpu className="w-4 h-4" />
                   <span>Integrasi Frontend React &amp; Backend Laravel 11</span>
                 </div>
-                <p className="text-xs leading-relaxed" style={{ color: '#94A3B8' }}>
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
                   Aplikasi ini dirancang menggunakan arsitektur <em>Decoupled Client-Server (SPA &amp; RESTful API)</em>. Frontend React + Tailwind CSS berkomunikasi dengan Backend Laravel via HTTP REST API yang diamankan menggunakan <strong>Laravel Sanctum Bearer Token</strong>.
                 </p>
               </div>
@@ -136,36 +136,36 @@ export const LaravelSpecModal: React.FC<Props> = ({ isOpen, onClose }) => {
               {/* Data Flow Diagram Card */}
               <div
                 className="rounded-xl p-5 space-y-4"
-                style={{ backgroundColor: '#1E293B', border: '1px solid #334155' }}
+                style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
               >
-                <h4 className="font-bold text-sm" style={{ color: '#F8FAFC' }}>
+                <h4 className="font-bold text-sm" style={{ color: 'var(--color-text-primary)' }}>
                   Alur Data Antara React dan Laravel:
                 </h4>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div className="p-3 rounded-lg" style={{ backgroundColor: '#111827', border: '1px solid #334155' }}>
-                    <span className="text-[10px] font-bold uppercase block mb-1" style={{ color: '#3B82F6' }}>
+                  <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
+                    <span className="text-[10px] font-bold uppercase block mb-1" style={{ color: 'var(--color-primary)' }}>
                       1. Client Tier (React 19)
                     </span>
-                    <p className="text-xs leading-snug" style={{ color: '#94A3B8' }}>
-                      Antarmuka 50 soal, visual progress bar, modal video, dan adaptive routing.
+                    <p className="text-xs leading-snug" style={{ color: 'var(--color-text-secondary)' }}>
+                      Antarmuka 30 soal acak (10 per level), visual progress bar, modal video, dan adaptive routing.
                     </p>
                   </div>
 
-                  <div className="p-3 rounded-lg" style={{ backgroundColor: '#111827', border: '1px solid #334155' }}>
-                    <span className="text-[10px] font-bold uppercase block mb-1" style={{ color: '#6366F1' }}>
+                  <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
+                    <span className="text-[10px] font-bold uppercase block mb-1" style={{ color: 'var(--color-primary)' }}>
                       2. Application Tier (Laravel 11)
                     </span>
-                    <p className="text-xs leading-snug" style={{ color: '#94A3B8' }}>
+                    <p className="text-xs leading-snug" style={{ color: 'var(--color-text-secondary)' }}>
                       Validasi input formulir, kalkulasi rumus skor, penentuan level (&lt;60 Beg, 60-79 Int, &ge;80 Adv), dan integrasi AI.
                     </p>
                   </div>
 
-                  <div className="p-3 rounded-lg" style={{ backgroundColor: '#111827', border: '1px solid #334155' }}>
-                    <span className="text-[10px] font-bold uppercase block mb-1" style={{ color: '#10B981' }}>
+                  <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
+                    <span className="text-[10px] font-bold uppercase block mb-1" style={{ color: 'var(--color-accent)' }}>
                       3. Database Tier (MySQL 8)
                     </span>
-                    <p className="text-xs leading-snug" style={{ color: '#94A3B8' }}>
+                    <p className="text-xs leading-snug" style={{ color: 'var(--color-text-secondary)' }}>
                       Menyimpan data persisten: 100 butir soal PHP terkurasi, histori jawaban, diagnosis skill gap, dan retest.
                     </p>
                   </div>
@@ -178,21 +178,21 @@ export const LaravelSpecModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="font-bold text-sm" style={{ color: '#F8FAFC' }}>{migrationSpec.filename}</h4>
-                  <p className="text-xs" style={{ color: '#94A3B8' }}>{migrationSpec.description}</p>
+                  <h4 className="font-bold text-sm" style={{ color: 'var(--color-text-primary)' }}>{migrationSpec.filename}</h4>
+                  <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>{migrationSpec.description}</p>
                 </div>
                 <button
                   onClick={() => handleCopy(migrationSpec.code, 'migration')}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer"
-                  style={{ backgroundColor: '#1E293B', color: '#F8FAFC', border: '1px solid #334155' }}
+                  style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', border: '1px solid var(--color-border)' }}
                 >
-                  {copiedFile === 'migration' ? <Check className="w-3.5 h-3.5" style={{ color: '#10B981' }} /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedFile === 'migration' ? <Check className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedFile === 'migration' ? 'Tersalin' : 'Salin Kode'}</span>
                 </button>
               </div>
 
-              <div className="rounded-xl overflow-hidden" style={{ backgroundColor: '#0B1020', border: '1px solid #334155' }}>
-                <pre className="p-4 text-xs font-mono overflow-x-auto leading-relaxed max-h-[500px]" style={{ color: '#10B981' }}>
+              <div className="rounded-xl overflow-hidden" style={{ backgroundColor: 'var(--color-background)', border: '1px solid var(--color-border)' }}>
+                <pre className="p-4 text-xs font-mono overflow-x-auto leading-relaxed max-h-[500px]" style={{ color: 'var(--color-accent)' }}>
                   <code>{migrationSpec.code}</code>
                 </pre>
               </div>
@@ -203,21 +203,21 @@ export const LaravelSpecModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="font-bold text-sm" style={{ color: '#F8FAFC' }}>{routesSpec.filename}</h4>
-                  <p className="text-xs" style={{ color: '#94A3B8' }}>{routesSpec.description}</p>
+                  <h4 className="font-bold text-sm" style={{ color: 'var(--color-text-primary)' }}>{routesSpec.filename}</h4>
+                  <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>{routesSpec.description}</p>
                 </div>
                 <button
                   onClick={() => handleCopy(routesSpec.code, 'routes')}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer"
-                  style={{ backgroundColor: '#1E293B', color: '#F8FAFC', border: '1px solid #334155' }}
+                  style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', border: '1px solid var(--color-border)' }}
                 >
-                  {copiedFile === 'routes' ? <Check className="w-3.5 h-3.5" style={{ color: '#10B981' }} /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedFile === 'routes' ? <Check className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedFile === 'routes' ? 'Tersalin' : 'Salin Kode'}</span>
                 </button>
               </div>
 
-              <div className="rounded-xl overflow-hidden" style={{ backgroundColor: '#0B1020', border: '1px solid #334155' }}>
-                <pre className="p-4 text-xs font-mono overflow-x-auto leading-relaxed max-h-[500px]" style={{ color: '#3B82F6' }}>
+              <div className="rounded-xl overflow-hidden" style={{ backgroundColor: 'var(--color-background)', border: '1px solid var(--color-border)' }}>
+                <pre className="p-4 text-xs font-mono overflow-x-auto leading-relaxed max-h-[500px]" style={{ color: 'var(--color-primary)' }}>
                   <code>{routesSpec.code}</code>
                 </pre>
               </div>
@@ -228,21 +228,21 @@ export const LaravelSpecModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="font-bold text-sm" style={{ color: '#F8FAFC' }}>{controllerSpec.filename}</h4>
-                  <p className="text-xs" style={{ color: '#94A3B8' }}>{controllerSpec.description}</p>
+                  <h4 className="font-bold text-sm" style={{ color: 'var(--color-text-primary)' }}>{controllerSpec.filename}</h4>
+                  <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>{controllerSpec.description}</p>
                 </div>
                 <button
                   onClick={() => handleCopy(controllerSpec.code, 'controller')}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer"
-                  style={{ backgroundColor: '#1E293B', color: '#F8FAFC', border: '1px solid #334155' }}
+                  style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', border: '1px solid var(--color-border)' }}
                 >
-                  {copiedFile === 'controller' ? <Check className="w-3.5 h-3.5" style={{ color: '#10B981' }} /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedFile === 'controller' ? <Check className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedFile === 'controller' ? 'Tersalin' : 'Salin Kode'}</span>
                 </button>
               </div>
 
-              <div className="rounded-xl overflow-hidden" style={{ backgroundColor: '#0B1020', border: '1px solid #334155' }}>
-                <pre className="p-4 text-xs font-mono overflow-x-auto leading-relaxed max-h-[500px]" style={{ color: '#6366F1' }}>
+              <div className="rounded-xl overflow-hidden" style={{ backgroundColor: 'var(--color-background)', border: '1px solid var(--color-border)' }}>
+                <pre className="p-4 text-xs font-mono overflow-x-auto leading-relaxed max-h-[500px]" style={{ color: 'var(--color-primary)' }}>
                   <code>{controllerSpec.code}</code>
                 </pre>
               </div>
@@ -253,21 +253,21 @@ export const LaravelSpecModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="font-bold text-sm" style={{ color: '#F8FAFC' }}>{serviceSpec.filename}</h4>
-                  <p className="text-xs" style={{ color: '#94A3B8' }}>{serviceSpec.description}</p>
+                  <h4 className="font-bold text-sm" style={{ color: 'var(--color-text-primary)' }}>{serviceSpec.filename}</h4>
+                  <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>{serviceSpec.description}</p>
                 </div>
                 <button
                   onClick={() => handleCopy(serviceSpec.code, 'service')}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer"
-                  style={{ backgroundColor: '#1E293B', color: '#F8FAFC', border: '1px solid #334155' }}
+                  style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', border: '1px solid var(--color-border)' }}
                 >
-                  {copiedFile === 'service' ? <Check className="w-3.5 h-3.5" style={{ color: '#10B981' }} /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedFile === 'service' ? <Check className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedFile === 'service' ? 'Tersalin' : 'Salin Kode'}</span>
                 </button>
               </div>
 
-              <div className="rounded-xl overflow-hidden" style={{ backgroundColor: '#0B1020', border: '1px solid #334155' }}>
-                <pre className="p-4 text-xs font-mono overflow-x-auto leading-relaxed max-h-[500px]" style={{ color: '#8B5CF6' }}>
+              <div className="rounded-xl overflow-hidden" style={{ backgroundColor: 'var(--color-background)', border: '1px solid var(--color-border)' }}>
+                <pre className="p-4 text-xs font-mono overflow-x-auto leading-relaxed max-h-[500px]" style={{ color: 'var(--color-primary)' }}>
                   <code>{serviceSpec.code}</code>
                 </pre>
               </div>
@@ -276,16 +276,16 @@ export const LaravelSpecModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
           {activeTab === 'payload' && (
             <div className="space-y-4 text-xs">
-              <h4 className="font-bold text-sm" style={{ color: '#F8FAFC' }}>
+              <h4 className="font-bold text-sm" style={{ color: 'var(--color-text-primary)' }}>
                 Struktur JSON Request &amp; Response API:
               </h4>
 
               <div className="space-y-3">
-                <div className="p-3.5 rounded-xl" style={{ backgroundColor: '#1E293B', border: '1px solid #334155' }}>
-                  <span className="font-mono font-bold block mb-1" style={{ color: '#3B82F6' }}>
+                <div className="p-3.5 rounded-xl" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
+                  <span className="font-mono font-bold block mb-1" style={{ color: 'var(--color-primary)' }}>
                     POST /api/assessments/submit
                   </span>
-                  <pre className="p-3 rounded-lg font-mono overflow-x-auto" style={{ backgroundColor: '#0B1020', color: '#10B981' }}>
+                  <pre className="p-3 rounded-lg font-mono overflow-x-auto" style={{ backgroundColor: 'var(--color-background)', color: 'var(--color-accent)' }}>
 {`{
   "answers": { "1": "A", "2": "C", ..., "50": "B" },
   "type": "initial"
@@ -293,11 +293,11 @@ export const LaravelSpecModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   </pre>
                 </div>
 
-                <div className="p-3.5 rounded-xl" style={{ backgroundColor: '#1E293B', border: '1px solid #334155' }}>
-                  <span className="font-mono font-bold block mb-1" style={{ color: '#10B981' }}>
+                <div className="p-3.5 rounded-xl" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
+                  <span className="font-mono font-bold block mb-1" style={{ color: 'var(--color-accent)' }}>
                     RESPONSE (200 OK)
                   </span>
-                  <pre className="p-3 rounded-lg font-mono overflow-x-auto" style={{ backgroundColor: '#0B1020', color: '#94A3B8' }}>
+                  <pre className="p-3 rounded-lg font-mono overflow-x-auto" style={{ backgroundColor: 'var(--color-background)', color: 'var(--color-text-secondary)' }}>
 {`{
   "status": "success",
   "score": 74,

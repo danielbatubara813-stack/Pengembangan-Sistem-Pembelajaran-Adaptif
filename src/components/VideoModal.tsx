@@ -12,31 +12,31 @@ export const VideoModal: React.FC = () => {
       <div
         className="relative w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl"
         style={{
-          backgroundColor: '#111827', // Slate 900
-          border: '1px solid #1E293B' // Slate 800
+          backgroundColor: 'var(--color-surface)', // Slate 900
+          border: '1px solid var(--color-border)' // Slate 800
         }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div
           className="flex items-center justify-between px-5 py-3.5"
-          style={{ backgroundColor: '#0D1527', borderBottom: '1px solid #334155' }}
+          style={{ backgroundColor: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)' }}
         >
           <div className="flex items-center gap-2 max-w-[80%]">
             <div
               className="w-6 h-6 rounded flex items-center justify-center"
-              style={{ backgroundColor: 'rgba(239, 68, 68, 0.2)', color: '#EF4444' }}
+              style={{ backgroundColor: 'rgba(239, 68, 68, 0.2)', color: 'var(--color-danger)' }}
             >
               <Play className="w-3.5 h-3.5 fill-current" />
             </div>
-            <h3 className="text-sm font-semibold truncate" style={{ color: '#F8FAFC' }}>
+            <h3 className="text-sm font-semibold break-words" style={{ color: 'var(--color-text-primary)' }}>
               {activeVideoEmbed.title}
             </h3>
           </div>
           <button
             onClick={closeVideoModal}
-            className="p-1 rounded-md transition-colors cursor-pointer hover:bg-slate-800"
-            style={{ color: '#94A3B8' }}
+            className="p-1 rounded-md transition-colors cursor-pointer hover:bg-slate-100"
+            style={{ color: 'var(--color-text-secondary)' }}
           >
             <X className="w-5 h-5" />
           </button>
@@ -56,17 +56,17 @@ export const VideoModal: React.FC = () => {
         {/* Footer */}
         <div
           className="px-5 py-3 flex items-center justify-between text-xs"
-          style={{ backgroundColor: '#0B1020', borderTop: '1px solid #1E293B' }}
+          style={{ backgroundColor: 'var(--color-background)', borderTop: '1px solid var(--color-border)' }}
         >
-          <div className="flex items-center gap-2" style={{ color: '#94A3B8' }}>
-            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#10B981' }}></span>
+          <div className="flex items-center gap-2" style={{ color: 'var(--color-text-secondary)' }}>
+            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-accent)' }}></span>
             <span>Video Pembelajaran Terintegrasi</span>
           </div>
 
           <button
             onClick={closeVideoModal}
-            className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer hover:bg-slate-700"
-            style={{ backgroundColor: '#1E293B', color: '#F8FAFC', border: '1px solid #334155' }}
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer hover:bg-slate-100"
+            style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', border: '1px solid var(--color-border)' }}
           >
             Tutup Pemutar
           </button>

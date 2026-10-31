@@ -1,4 +1,4 @@
-import { Question } from '../types';
+import type { Question } from '../types/index.ts';
 
 export const RETEST_QUESTIONS: Question[] = [
   // --- 1. Dasar PHP (Soal 1 - 4) ---

@@ -4,7 +4,6 @@ import {
   ChevronLeft,
   ChevronRight,
   RotateCcw,
-  Sparkles,
   LayoutGrid,
   Send,
   Code,
@@ -14,6 +13,7 @@ import {
 export const RetestPage: React.FC = () => {
   const {
     submitRetestAssessment,
+    navigateTo,
     initialResult,
     retestAttempt,
     currentRetestQuestions,
@@ -26,14 +26,14 @@ export const RetestPage: React.FC = () => {
   const [answers, setAnswers] = useState<Record<number, 'A' | 'B' | 'C' | 'D'>>({});
   const [showGridDrawer, setShowGridDrawer] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const handleRegenerate = async () => {
     setAnswers({});
     setCurrentIndex(0);
     await regenerateRetestQuestions();
   };
 
-  const totalQuestions = currentRetestQuestions.length; // Exactly 50
+  const totalQuestions = currentRetestQuestions.length;
   const currentQ = currentRetestQuestions[currentIndex] || currentRetestQuestions[0];
   const selectedAnswer = currentQ ? answers[currentQ.id] : undefined;
 
@@ -62,59 +62,70 @@ export const RetestPage: React.FC = () => {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    setSubmitError(null);
     try {
       await submitRetestAssessment(answers);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : 'Jawaban retest belum dapat dikirim.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Fast-fill for evaluators: 88% score demonstrating resolved skill gaps
-  const handleQuickFillRetest = () => {
-    const autoFilled: Record<number, 'A' | 'B' | 'C' | 'D'> = {};
-    currentRetestQuestions.forEach((q, idx) => {
-      if (idx % 8 === 0) {
-        autoFilled[q.id] = q.correct_answer === 'A' ? 'C' : 'A';
-      } else {
-        autoFilled[q.id] = q.correct_answer;
-      }
-    });
-    setAnswers(autoFilled);
-  };
+  if (currentRetestQuestions.length === 0) {
+    return (
+      <div className="page-content py-8">
+        <div className="panel mx-auto max-w-xl p-6 text-center" role={isGeneratingRetestQuestions ? 'status' : 'region'} aria-label="Pilihan memulai retest">
+          <h1 className="text-lg font-bold text-slate-900">{isGeneratingRetestQuestions ? 'Menyiapkan paket retest...' : 'Retest dimulai saat Anda siap'}</h1>
+          <p className="mt-2 text-sm text-slate-600">{aiGenerationMessage || 'Anda boleh belajar satu materi, sebagian materi, mengulang, atau langsung retest. Tidak ada materi yang wajib diselesaikan.'}</p>
+          {!isGeneratingRetestQuestions && (
+            <div className="mt-5 flex flex-wrap justify-center gap-3">
+              <button className="btn-primary" onClick={() => void handleRegenerate()}>
+                Saya Siap Retest
+              </button>
+              <button className="button-secondary" onClick={() => navigateTo('recommendations')}>
+                Lanjut belajar
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="py-2 sm:py-4 max-w-4xl mx-auto space-y-6">
+    <div className="page-content py-2 sm:py-4 space-y-6">
       {/* Exam Pack Banner */}
       <div
         className="p-4 sm:p-5 rounded-2xl shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4"
         style={{
-          backgroundColor: '#111827', // Slate 900
-          border: '1px solid #1E293B' // Slate 800
+          backgroundColor: 'var(--color-surface)', // Slate 900
+          border: '1px solid var(--color-border)' // Slate 800
         }}
       >
         <div className="flex items-center gap-3">
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white shrink-0 shadow-md"
-            style={{ backgroundColor: '#10B981' }} // Emerald 500
+            style={{ backgroundColor: 'var(--color-accent)' }} // Emerald 500
           >
             <RotateCcw className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-bold" style={{ color: '#F8FAFC' }}>
+              <span className="text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
                 Paket Ujian Retest #{retestAttempt}
               </span>
               <span
                 className="text-[10px] font-bold px-2 py-0.5 rounded-full"
                 style={{
-                  backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                  color: '#10B981'
+                  backgroundColor: 'rgba(4, 120, 87, 0.15)',
+                  color: 'var(--color-accent)'
                 }}
               >
-                50 Butir Soal Baru
+                {totalQuestions} Butir Soal Baru
               </span>
             </div>
-            <p className="text-xs mt-0.5" style={{ color: '#94A3B8' }}>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>
               {aiGenerationMessage || 'Materi butir soal disesuaikan secara adaptif sesuai evaluasi skill gap Anda.'}
             </p>
           </div>
@@ -125,77 +136,65 @@ export const RetestPage: React.FC = () => {
           disabled={isGeneratingRetestQuestions}
           className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer hover:opacity-95 self-start sm:self-auto"
           style={{
-            backgroundColor: '#1E293B',
-            border: '1px solid #334155',
-            color: '#F8FAFC'
+            backgroundColor: 'var(--color-surface)',
+            border: '1px solid var(--color-border)',
+            color: 'var(--color-text-primary)'
           }}
-          title="Muat paket 50 butir soal baru"
+          title="Muat paket maksimal 30 butir soal baru"
         >
           <RotateCcw className={`w-3.5 h-3.5 ${isGeneratingRetestQuestions ? 'animate-spin' : ''}`} />
           <span>{isGeneratingRetestQuestions ? 'Memuat Soal...' : 'Ganti Paket Soal'}</span>
         </button>
       </div>
 
-      {/* Retest Top Header & Simulation Helper */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4" style={{ borderBottom: '1px solid #334155' }}>
+      {/* Paket retest and navigation */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4" style={{ borderBottom: '1px solid var(--color-border)' }}>
         <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider block" style={{ color: '#10B981' }}>
+          <span className="text-[11px] font-bold uppercase tracking-wider block" style={{ color: 'var(--color-accent)' }}>
             Tahap 2: Pengujian Ulang (Retest)
           </span>
-          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mt-0.5" style={{ color: '#F8FAFC' }}>
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mt-0.5" style={{ color: 'var(--color-text-primary)' }}>
             Retest Kemampuan PHP
           </h1>
-          <span className="text-xs" style={{ color: '#94A3B8' }}>
+          <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
             Soal Berbeda dari Tes Awal &bull; Skor Tes Awal: {initialResult?.score || 0}%
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           <button
-            onClick={handleQuickFillRetest}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl transition-all cursor-pointer hover:opacity-90"
-            style={{
-              backgroundColor: 'rgba(16, 185, 129, 0.15)',
-              border: '1px solid rgba(16, 185, 129, 0.3)',
-              color: '#10B981'
-            }}
-            title="Isi simulasi cepat jawaban untuk melihat lonjakan skor dan komparasi AI"
-          >
-            <Sparkles className="w-3.5 h-3.5" style={{ color: '#F59E0B' }} />
-            <span className="hidden sm:inline">Simulasi Retest (88%)</span>
-          </button>
-
-          <button
             onClick={() => setShowGridDrawer(!showGridDrawer)}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer"
             style={{
-              backgroundColor: showGridDrawer ? '#3B82F6' : '#111827',
-              border: '1px solid #1E293B',
-              color: '#F8FAFC'
+              backgroundColor: showGridDrawer ? 'var(--color-primary)' : 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-text-primary)'
             }}
           >
             <LayoutGrid className="w-3.5 h-3.5" />
-            <span>Peta Soal (50)</span>
+            <span>Peta Soal ({totalQuestions})</span>
           </button>
         </div>
       </div>
 
+      {submitError && <p className="notice-panel text-sm text-rose-700" role="alert">{submitError}</p>}
+
       {/* Progress Bar */}
       <div>
         <div className="flex items-center justify-between text-xs mb-2">
-          <span className="font-bold" style={{ color: '#F8FAFC' }}>
+          <span className="font-bold" style={{ color: 'var(--color-text-primary)' }}>
             Soal {currentIndex + 1} dari {totalQuestions}
           </span>
-          <span style={{ color: '#94A3B8' }}>
-            Terjawab: <strong style={{ color: '#10B981' }}>{answeredCount}</strong> / {totalQuestions} ({progressPercentage}%)
+          <span style={{ color: 'var(--color-text-secondary)' }}>
+            Terjawab: <strong style={{ color: 'var(--color-accent)' }}>{answeredCount}</strong> / {totalQuestions} ({progressPercentage}%)
           </span>
         </div>
-        <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: '#1E293B' }}>
+        <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--color-surface)' }}>
           <div
             className="h-full rounded-full transition-all duration-300"
             style={{
               width: `${((currentIndex + 1) / totalQuestions) * 100}%`,
-              backgroundColor: '#10B981'
+              backgroundColor: 'var(--color-accent)'
             }}
           />
         </div>
@@ -206,15 +205,15 @@ export const RetestPage: React.FC = () => {
         <div
           className="p-5 rounded-2xl shadow-xl animate-in fade-in duration-150"
           style={{
-            backgroundColor: '#111827',
-            border: '1px solid #1E293B'
+            backgroundColor: 'var(--color-surface)',
+            border: '1px solid var(--color-border)'
           }}
         >
           <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#F8FAFC' }}>
-              Daftar 50 Butir Soal Retest
+            <span className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--color-text-primary)' }}>
+              Daftar {totalQuestions} Butir Soal Retest
             </span>
-            <button onClick={() => setShowGridDrawer(false)} className="hover:text-white" style={{ color: '#64748B' }}>
+            <button onClick={() => setShowGridDrawer(false)} className="hover:text-white" style={{ color: 'var(--color-text-secondary)' }}>
               <X className="w-4 h-4" />
             </button>
           </div>
@@ -231,9 +230,9 @@ export const RetestPage: React.FC = () => {
                   }}
                   className="h-8 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center"
                   style={{
-                    backgroundColor: isAnswered ? '#10B981' : '#1E293B',
-                    color: isAnswered ? '#FFFFFF' : '#94A3B8',
-                    border: isCurrent ? '2px solid #3B82F6' : '1px solid #334155'
+                    backgroundColor: isAnswered ? 'var(--color-accent)' : 'var(--color-surface)',
+                    color: isAnswered ? '#FFFFFF' : 'var(--color-text-secondary)',
+                    border: isCurrent ? '2px solid var(--color-primary)' : '1px solid var(--color-border)'
                   }}
                 >
                   {idx + 1}
@@ -248,45 +247,45 @@ export const RetestPage: React.FC = () => {
       <div
         className="p-6 sm:p-8 rounded-2xl shadow-xl"
         style={{
-          backgroundColor: '#111827', // Slate 900
-          border: '1px solid #1E293B' // Slate 800
+          backgroundColor: 'var(--color-surface)', // Slate 900
+          border: '1px solid var(--color-border)' // Slate 800
         }}
       >
-        <div className="flex items-center justify-between pb-4 mb-6" style={{ borderBottom: '1px solid #1E293B' }}>
+        <div className="flex items-center justify-between pb-4 mb-6" style={{ borderBottom: '1px solid var(--color-border)' }}>
           <span
             className="text-xs font-mono font-bold px-3 py-1 rounded-lg"
             style={{
-              backgroundColor: '#1E293B',
-              color: '#10B981'
+              backgroundColor: 'var(--color-surface)',
+              color: 'var(--color-accent)'
             }}
           >
             Soal {currentIndex + 1} dari {totalQuestions}
           </span>
-          <span className="text-xs font-medium" style={{ color: '#94A3B8' }}>
-            Kategori: <strong style={{ color: '#F8FAFC' }}>{currentQ?.category}</strong>
+          <span className="text-xs font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+            Kategori: <strong style={{ color: 'var(--color-text-primary)' }}>{currentQ?.category}</strong>
           </span>
         </div>
 
         {/* Question Text */}
         <div className="mb-6">
-          <p className="text-base sm:text-lg font-medium leading-relaxed" style={{ color: '#F8FAFC' }}>
+          <p className="text-base sm:text-lg font-medium leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
             {currentQ?.question}
           </p>
         </div>
 
         {/* Code Snippet Box */}
         {currentQ?.codeSnippet && (
-          <div className="mb-6 rounded-xl overflow-hidden shadow-inner" style={{ border: '1px solid #334155' }}>
+          <div className="mb-6 rounded-xl overflow-hidden shadow-inner" style={{ border: '1px solid var(--color-border)' }}>
             <div
               className="px-4 py-2 flex items-center justify-between text-xs font-mono"
-              style={{ backgroundColor: '#0D1527', borderBottom: '1px solid #334155' }}
+              style={{ backgroundColor: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)' }}
             >
-              <span style={{ color: '#94A3B8' }}>Studi Kasus PHP</span>
-              <span style={{ color: '#10B981' }}>Retest Problem</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>Studi Kasus PHP</span>
+              <span style={{ color: 'var(--color-accent)' }}>Retest Problem</span>
             </div>
             <pre
               className="p-4 text-xs font-mono overflow-x-auto leading-relaxed"
-              style={{ backgroundColor: '#0B1020', color: '#10B981' }}
+              style={{ backgroundColor: 'var(--color-background)', color: 'var(--color-accent)' }}
             >
               <code>{currentQ.codeSnippet}</code>
             </pre>
@@ -303,22 +302,22 @@ export const RetestPage: React.FC = () => {
                 onClick={() => handleSelectOption(opt.key)}
                 className="p-4 rounded-xl flex items-start gap-3.5 transition-all cursor-pointer"
                 style={{
-                  backgroundColor: isSelected ? 'rgba(16, 185, 129, 0.15)' : '#1E293B',
-                  border: isSelected ? '1px solid #10B981' : '1px solid #334155'
+                  backgroundColor: isSelected ? 'rgba(4, 120, 87, 0.15)' : 'var(--color-surface)',
+                  border: isSelected ? '1px solid var(--color-accent)' : '1px solid var(--color-border)'
                 }}
               >
                 <div
                   className="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 transition-colors"
                   style={{
-                    backgroundColor: isSelected ? '#10B981' : '#0D1527',
-                    color: '#F8FAFC'
+                    backgroundColor: isSelected ? 'var(--color-accent)' : 'var(--color-surface)',
+                    color: isSelected ? 'var(--color-surface)' : 'var(--color-text-primary)'
                   }}
                 >
                   {opt.key}
                 </div>
                 <span
                   className="text-xs sm:text-sm pt-0.5 leading-relaxed"
-                  style={{ color: isSelected ? '#F8FAFC' : '#94A3B8' }}
+                  style={{ color: isSelected ? 'var(--color-text-primary)' : 'var(--color-text-secondary)' }}
                 >
                   {opt.text}
                 </span>
@@ -328,16 +327,16 @@ export const RetestPage: React.FC = () => {
         </div>
 
         {/* Bottom Navigation */}
-        <div className="mt-8 pt-6 flex items-center justify-between" style={{ borderTop: '1px solid #1E293B' }}>
+        <div className="mt-8 pt-6 flex items-center justify-between" style={{ borderTop: '1px solid var(--color-border)' }}>
           <button
             type="button"
             onClick={handlePrev}
             disabled={currentIndex === 0}
             className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all disabled:opacity-30 cursor-pointer"
             style={{
-              backgroundColor: '#1E293B',
-              border: '1px solid #334155',
-              color: '#F8FAFC'
+              backgroundColor: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-text-primary)'
             }}
           >
             <ChevronLeft className="w-4 h-4" />
@@ -350,8 +349,8 @@ export const RetestPage: React.FC = () => {
               onClick={handleNext}
               className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer hover:opacity-95"
               style={{
-                backgroundColor: '#3B82F6',
-                color: '#F8FAFC'
+                backgroundColor: 'var(--color-primary)',
+                color: "var(--color-surface)"
               }}
             >
               <span>Berikutnya</span>
@@ -364,8 +363,8 @@ export const RetestPage: React.FC = () => {
               disabled={isSubmitting}
               className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer hover:opacity-95"
               style={{
-                backgroundColor: '#10B981', // Emerald 500
-                color: '#F8FAFC'
+                backgroundColor: 'var(--color-accent)', // Emerald 500
+                color: "var(--color-surface)"
               }}
             >
               <Send className="w-4 h-4" />

@@ -18,6 +18,8 @@ class Question extends Model
         'difficulty',
         'exam_type',
         'explanation',
+        'source',
+        'bank_key',
     ];
 
     protected $casts = [

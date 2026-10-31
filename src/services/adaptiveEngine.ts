@@ -46,15 +46,15 @@ export function calculateAssessmentResult(
   const totalQuestions = questions.length;
   const score = Math.round((correctCount / (totalQuestions || 1)) * 100);
 
-  // Aturan Level:
-  // Score < 60 -> Beginner
-  // 60 <= Score < 80 -> Intermediate
-  // Score >= 80 -> Advanced
+  const measuredTopicScores = Object.values(topicMap)
+    .filter((topic) => topic.total > 0)
+    .map((topic) => Math.round((topic.correct / topic.total) * 100));
+  const hasMinimumTopicFoundation = measuredTopicScores.every((topicScore) => topicScore >= 60);
+  const meetsAdvancedTopicTarget = measuredTopicScores.length > 0 &&
+    measuredTopicScores.every((topicScore) => topicScore >= 80);
   let level: PHPDifficulty = 'Beginner';
-  if (score >= 80) {
-    level = 'Advanced';
-  } else if (score >= 60) {
-    level = 'Intermediate';
+  if (score >= 70 && hasMinimumTopicFoundation) {
+    level = score >= 85 && meetsAdvancedTopicTarget ? 'Advanced' : 'Intermediate';
   }
 
   // Topic Scores & Status
@@ -81,8 +81,9 @@ export function calculateAssessmentResult(
       status
     };
 
-    // Skill Gap: Performa rendah pada topik (< 70% atau status Cukup/Perlu Peningkatan)
-    if (percentage < 70) {
+    // Include only topics covered by this test; untested topics are not skill gaps.
+    const skillGapThreshold = level === 'Beginner' ? 60 : 80;
+    if (data.total > 0 && percentage < skillGapThreshold) {
       const priority = percentage < 50 ? 'Tinggi' : 'Sedang';
       skillGaps.push({
         topic,
@@ -97,17 +98,21 @@ export function calculateAssessmentResult(
   // Urutkan skill gaps dari yang paling rendah persentasenya
   skillGaps.sort((a, b) => a.score - b.score);
 
-  // Jika semua topik > 70%, ambil 1 atau 2 topik yang persentasenya relatif paling rendah sebagai area optimasi
+  // If all measured topics meet the target, show the lowest-scoring topic as an optional focus area.
   if (skillGaps.length === 0) {
-    const sortedTopics = [...topicKeys].sort((a, b) => topicScores[a].percentage - topicScores[b].percentage);
+    const sortedTopics = topicKeys
+      .filter((topic) => topicScores[topic].total > 0)
+      .sort((a, b) => topicScores[a].percentage - topicScores[b].percentage);
     const lowest = sortedTopics[0];
-    skillGaps.push({
-      topic: lowest,
-      score: topicScores[lowest].percentage,
-      priority: 'Rendah',
-      summary: `Kemampuan Anda secara umum sangat baik. Penguatan lebih lanjut disarankan pada topik ${lowest}.`,
-      recommendationFocus: getTopicFocusArea(lowest)
-    });
+    if (lowest) {
+      skillGaps.push({
+        topic: lowest,
+        score: topicScores[lowest].percentage,
+        priority: 'Rendah',
+        summary: `Kemampuan Anda secara umum sangat baik. Penguatan lebih lanjut disarankan pada topik ${lowest}.`,
+        recommendationFocus: getTopicFocusArea(lowest)
+      });
+    }
   }
 
   // Generate Analisis AI Singkat
@@ -173,7 +178,8 @@ export function compareAssessments(
 
   initial.skillGaps.forEach((sg) => {
     const retestScore = retest.topicScores[sg.topic]?.percentage ?? 0;
-    if (retestScore >= 70) {
+    const targetScore = initial.level === 'Beginner' ? 60 : 80;
+    if (retestScore >= targetScore) {
       resolvedSkillGaps.push(`${sg.topic} (dari ${sg.score}% naik menjadi ${retestScore}%)`);
     } else {
       remainingSkillGaps.push(`${sg.topic} (${retestScore}%)`);
@@ -268,5 +274,5 @@ function generateActionPlan(level: PHPDifficulty, skillGaps: SkillGapItem[]): st
   }
 
   const primaryGaps = skillGaps.slice(0, 3).map((s) => s.topic).join(', ');
-  return `Fokuskan 70% waktu belajar Anda pada modul rekomendasi untuk topik ${primaryGaps}. Tonton materi video langsung di sistem, cermati contoh kode implementasi, kemudian uji kembali perkembangan pemahaman Anda melalui Retest 50 Soal.`;
+  return `Fokuskan 70% waktu belajar Anda pada modul rekomendasi untuk topik ${primaryGaps}. Tonton materi video langsung di sistem, cermati contoh kode implementasi, kemudian uji kembali perkembangan pemahaman Anda melalui retest maksimal 30 soal.`;
 }

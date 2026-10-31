@@ -1,5 +1,5 @@
-import { Question, PHPTopic } from '../types';
-import { RETEST_QUESTIONS } from './retestQuestions';
+import type { PHPTopic, Question } from '../types/index.ts';
+import { RETEST_QUESTIONS } from './retestQuestions.ts';
 
 // Pool B: 50 Soal Alternatif Berbeda untuk Retest Percobaan 2
 export const RETEST_POOL_B: Question[] = [
@@ -856,7 +856,9 @@ const prioritizeQuestionsBySkillGap = (pool: Question[], skillGaps: string[]) =>
   return prioritized.length ? [...prioritized, ...remaining] : pool;
 };
 
-// Smart Rotator: Memilih 50 soal yang berbeda untuk setiap percobaan dan memasukkan soal AI kustom jika ada
+const MAX_RETEST_QUESTIONS = 30;
+
+// Smart Rotator: memilih paket soal baru dan memasukkan soal AI kustom jika ada.
 export function getRetestQuestionsForAttempt(
   attempt: number,
   skillGaps: string[] = [],
@@ -880,13 +882,13 @@ export function getRetestQuestionsForAttempt(
         };
       }
     });
-    return poolCopy.map((q, idx) => ({
+    return poolCopy.slice(0, MAX_RETEST_QUESTIONS).map((q, idx) => ({
       ...q,
       id: (attempt * 100) + (idx + 1)
     }));
   }
 
-  return rotatedPool.map((q, idx) => ({
+  return rotatedPool.slice(0, MAX_RETEST_QUESTIONS).map((q, idx) => ({
     ...q,
     id: (attempt * 100) + (idx + 1)
   }));

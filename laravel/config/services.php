@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+        'model' => env('GEMINI_MODEL', 'gemini-2.5-flash'),
+        'search_model' => env('GEMINI_SEARCH_MODEL', env('GEMINI_MODEL', 'gemini-3.8-flash')),
+    ],
+
+    'openrouter' => [
+        'api_key' => env('OPENROUTER_API_KEY'),
+        'model' => env('OPENROUTER_CHAT_MODEL', env('OPENROUTER_MODEL', 'openai/gpt-4o-mini')),
+    ],
+
 ];

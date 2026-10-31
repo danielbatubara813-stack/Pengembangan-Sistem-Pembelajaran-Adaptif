@@ -30,7 +30,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->integer('score'); // 0 - 100
-            $table->integer('total_questions')->default(50);
+            $table->integer('total_questions')->default(30);
             $table->integer('correct_count');
             $table->enum('level', ['Beginner', 'Intermediate', 'Advanced']);
             $table->json('topic_scores')->nullable(); // detail per-topik
@@ -71,7 +71,7 @@ return new class extends Migration
             $table->foreignId('initial_assessment_id')->constrained('assessments')->cascadeOnDelete();
             $table->integer('score'); // 0 - 100
             $table->integer('correct_count');
-            $table->integer('total_questions')->default(50);
+            $table->integer('total_questions')->default(30);
             $table->enum('level', ['Beginner', 'Intermediate', 'Advanced']);
             $table->integer('score_difference'); // selisih skor (+/-)
             $table->json('topic_scores')->nullable();

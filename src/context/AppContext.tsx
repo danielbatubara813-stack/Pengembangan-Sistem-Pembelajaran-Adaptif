@@ -57,7 +57,7 @@ interface AppContextType {
   navigateTo: (page: AppPage, topic?: PHPTopic, competencyKey?: string) => void;
   loadInitialQuestions: () => Promise<PublicQuestion[]>;
   loginUser: (email: string, password: string) => Promise<void>;
-  registerUser: (name: string, email: string, nim: string, password: string) => Promise<void>;
+  registerUser: (name: string, email: string, password: string) => Promise<void>;
   logoutUser: () => Promise<void>;
   submitInitialAssessment: (
     answers: Record<number, 'A' | 'B' | 'C' | 'D'>
@@ -159,6 +159,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     let page = progress?.currentPage && savedPages.includes(progress.currentPage)
       ? progress.currentPage
       : (nextInitialResult ? 'dashboard' : 'assessment');
+    if (nextInitialResult && page === 'assessment') page = 'dashboard';
     if (!nextInitialResult && protectedPages.includes(page)) page = 'assessment';
     if (page === 'retest_result' && !nextRetestResult) page = 'dashboard';
     setCurrentPage(page);
@@ -287,6 +288,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return;
     }
 
+    if (page === 'assessment' && initialResult) {
+      setCurrentPage('dashboard');
+      return;
+    }
+
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -301,34 +307,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     applyProgress(response.progress);
   };
 
-  const registerUser = async (name: string, email: string, nim: string, password: string) => {
+  const registerUser = async (name: string, email: string, password: string) => {
     const response = await requestApi<AuthResponse>('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, nim, password })
+      body: JSON.stringify({ name, email, password })
     });
     setUser(response.user);
     applyProgress(response.progress);
   };
 
   const logoutUser = async () => {
-    if (user && isProgressHydrated) {
-      try {
-        await materialProgressWrite.current;
-        await requestApi('/api/progress', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ currentPage, retestAttempt })
-        });
-      } catch (error) {
-        console.error('Gagal menyimpan progress sebelum keluar.', error);
-      }
-    }
-    try {
-      await requestApi('/api/auth/logout', { method: 'POST' });
-    } catch {
-      // Clear the local account view even when the server is unreachable.
-    }
+    const shouldSaveProgress = !!user && isProgressHydrated;
     setUser(null);
     setIsProgressHydrated(false);
     setInitialResult(null);
@@ -342,6 +332,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setRetestAttempt(1);
     setCurrentRetestQuestions([]);
     setCurrentPage('landing');
+
+    try {
+      if (shouldSaveProgress) await materialProgressWrite.current;
+      await requestApi('/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(shouldSaveProgress ? { currentPage, retestAttempt } : {})
+      });
+    } catch (error) {
+      console.error('Gagal menyimpan progress atau mengakhiri sesi.', error);
+    }
   };
 
   const submitInitialAssessment = async (

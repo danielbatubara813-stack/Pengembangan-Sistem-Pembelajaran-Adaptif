@@ -54,6 +54,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, setIsMobileOpen 
   const { user, currentPage, navigateTo, logoutUser, initialResult, retestResult } = useApp();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const activeResult = retestResult || initialResult;
+  const visibleGroups = groups
+    .map((group) => ({
+      ...group,
+      items: group.items.filter(({ page }) => page !== 'assessment' || !initialResult)
+    }))
+    .filter((group) => group.items.length > 0);
 
   const handleNavigate = (page: AppPage) => {
     navigateTo(page);
@@ -81,7 +87,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, setIsMobileOpen 
         </div>
 
         <nav aria-label="Navigasi utama" className="sidebar-nav">
-          {groups.map((group) => (
+          {visibleGroups.map((group) => (
             <section key={group.label} className="sidebar-group">
               <h2>{group.label}</h2>
               {group.items.map(({ label, page, icon: Icon }) => {

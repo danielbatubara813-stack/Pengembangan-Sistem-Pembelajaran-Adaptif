@@ -78,6 +78,17 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
+        $progress = $request->validate([
+            'currentPage' => ['sometimes', 'string', 'max:40'],
+            'retestAttempt' => ['sometimes', 'integer', 'min:1', 'max:10000'],
+        ]);
+
+        if ($progress !== []) {
+            $storedProgress = $request->user()->progress()->firstOrNew();
+            $storedProgress->payload = array_merge($storedProgress->payload ?? [], $progress);
+            $storedProgress->save();
+        }
+
         Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

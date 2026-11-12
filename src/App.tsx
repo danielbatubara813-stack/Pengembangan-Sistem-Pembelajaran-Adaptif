@@ -70,7 +70,7 @@ const AppContent: React.FC = () => {
       case 'login':
         return initialResult ? <DashboardPage /> : <AssessmentPage />;
       case 'assessment':
-        return <AssessmentPage />;
+        return initialResult ? <DashboardPage /> : <AssessmentPage />;
       case 'assessment_result':
         return <AssessmentResultPage />;
       case 'dashboard':
@@ -113,11 +113,6 @@ const AppContent: React.FC = () => {
           </main>
           <footer className="public-footer">
             <span>© 2026 AdaptivePHP. Belajar dengan arah.</span>
-            <nav aria-label="Informasi">
-              <a href="#privasi">Privasi</a>
-              <a href="#ketentuan">Ketentuan</a>
-              <a href="mailto:bantuan@adaptivephp.id">Bantuan</a>
-            </nav>
           </footer>
           <LaravelSpecModal isOpen={isLaravelSpecOpen} onClose={closeLaravelSpec} />
         </div>

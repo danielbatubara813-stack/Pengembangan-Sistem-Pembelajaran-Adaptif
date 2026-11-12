@@ -7,7 +7,6 @@ export const RegisterPage: React.FC = () => {
   const { registerUser, navigateTo } = useApp();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [nim, setNim] = useState('');
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
   const [error, setError] = useState('');
@@ -26,7 +25,7 @@ export const RegisterPage: React.FC = () => {
     setError('');
     setIsSubmitting(true);
     try {
-      await registerUser(name.trim(), email.trim(), nim.trim(), password);
+      await registerUser(name.trim(), email.trim(), password);
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : 'Akun belum dapat dibuat. Coba lagi.');
     } finally {
@@ -50,9 +49,6 @@ export const RegisterPage: React.FC = () => {
         </label>
         <label>Email
           <span className="auth-input"><Mail size={16} /><input type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="nama@email.com" /></span>
-        </label>
-        <label>NIM <span className="auth-muted">(opsional)</span>
-          <span className="auth-input"><UserRound size={16} /><input autoComplete="off" value={nim} onChange={(event) => setNim(event.target.value)} placeholder="Nomor induk mahasiswa" /></span>
         </label>
         <label>Kata sandi
           <span className="auth-input"><LockKeyhole size={16} /><input type="password" autoComplete="new-password" minLength={8} required value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Minimal 8 karakter" /></span>

@@ -19,6 +19,50 @@ class AdaptiveApiTest extends TestCase
 {
     use DatabaseTransactions;
 
+    public function test_logout_saves_latest_navigation_without_clearing_existing_progress(): void
+    {
+        $user = User::create([
+            'name' => 'Logout Learner',
+            'email' => $this->testEmail('logout'),
+            'password' => 'Passw0rd!_test',
+        ]);
+        $existingProgress = [
+            'currentPage' => 'history',
+            'retestAttempt' => 2,
+            'completedMaterials' => ['resource:array:manual'],
+            'completedMaterialDetails' => [
+                'resource:array:manual' => [
+                    'id' => 'resource:array:manual',
+                    'title' => 'Array guide',
+                    'topic' => 'Array',
+                    'kind' => 'source',
+                    'completedAt' => now()->toISOString(),
+                ],
+            ],
+        ];
+        $user->progress()->create(['payload' => $existingProgress]);
+
+        $this->withHeaders([
+            'Origin' => 'http://localhost:5173',
+            'Referer' => 'http://localhost:5173/',
+        ])->actingAs($user)
+            ->postJson('/api/auth/logout', [
+                'currentPage' => 'progress',
+                'retestAttempt' => 3,
+            ])
+            ->assertOk()
+            ->assertJsonPath('success', true);
+
+        $savedProgress = $user->progress()->firstOrFail()->payload;
+        $this->assertSame('progress', $savedProgress['currentPage']);
+        $this->assertSame(3, $savedProgress['retestAttempt']);
+        $this->assertSame($existingProgress['completedMaterials'], $savedProgress['completedMaterials']);
+        $this->assertEquals(
+            $existingProgress['completedMaterialDetails'],
+            $savedProgress['completedMaterialDetails'],
+        );
+    }
+
     public function test_sanctum_session_progress_assessment_and_retest_api(): void
     {
         $email = $this->testEmail('learner');
@@ -32,7 +76,6 @@ class AdaptiveApiTest extends TestCase
         $this->postJson('/api/auth/register', [
             'name' => 'Test Learner',
             'email' => $email,
-            'nim' => (string) random_int(100000, 999999),
             'password' => 'Passw0rd!_test',
         ])->assertCreated()
             ->assertJsonPath('user.email', $email)
